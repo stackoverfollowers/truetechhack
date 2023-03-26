@@ -6,6 +6,4 @@ COPY ./src .
 
 RUN yarn global add pnpm && pnpm i --frozen-lockfile
 
-RUN pnpm run build
-
-CMD ["pnpm", "start"]
+CMD ["pnpm", "dev"]
