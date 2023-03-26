@@ -1,3 +1,4 @@
+import os
 import shutil
 import uuid
 from pathlib import Path
@@ -11,6 +12,8 @@ from fastapi import (
     Header,
     Response,
 )
+from fastapi_pagination import Page
+from fastapi_pagination.ext.tortoise import paginate
 from starlette import status
 
 from constants import get_settings
@@ -42,7 +45,7 @@ async def upload_video(file: UploadFile = File(...)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Files with content-type {content_type} is not supported",
         )
-    path = f"{settings.STATIC_PATH}{uuid.uuid4()}-{filename}"
+    path = f"{settings.STATIC_PATH}/{uuid.uuid4()}-{filename}"
     with open(path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     video = await UploadedVideo.create(filename=filename, path=path)
@@ -75,4 +78,11 @@ async def get_stream(
 )
 async def delete_video(video: UploadedVideo = Depends(get_video)):
     await video.delete()
+    if os.path.exists(video.path):
+        os.remove(video.path)
     return {"status": "ok"}
+
+
+@router.get("/videos", response_model=Page[UploadedVideoSchema])
+async def get_videos_paginator(preprocessed: bool = True):
+    return await paginate(UploadedVideo.filter(preprocessed=preprocessed))

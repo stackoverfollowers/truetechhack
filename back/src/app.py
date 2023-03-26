@@ -8,6 +8,8 @@ from schemas import UserSchema, PreferencesSchema
 from db.models import User, Preferences
 from routers import auth_router, video_router
 
+from fastapi_pagination import add_pagination
+
 settings = get_settings()
 
 
@@ -24,7 +26,7 @@ def create_app():
 
     app.include_router(auth_router)
     app.include_router(video_router)
-
+    add_pagination(app)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
