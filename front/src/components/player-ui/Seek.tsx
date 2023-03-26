@@ -2,16 +2,13 @@ import { setProgress, setSeeking } from '@/services/playerSlice';
 import { RootState } from '@/store';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef } from 'react';
+import generateRangeStyle from '@/lib/generate-range-style';
 
 const Seek = forwardRef((props, ref) => {
 	const dispatch = useDispatch();
 	const progress = useSelector((state: RootState) => state.player.progress);
 
-	const seekStyle = {
-		background: `linear-gradient(to right, #facc15 ${
-			progress.played * 100
-		}%, #9ca3af ${progress.played * 100}% 100%)`,
-	};
+	const seekStyle = generateRangeStyle(progress.played);
 
 	return (
 		<input

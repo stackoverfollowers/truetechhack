@@ -1,46 +1,35 @@
-import { Dispatch } from '@reduxjs/toolkit';
-import React, { useState } from 'react';
+import generateRangeStyle from '@/lib/generate-range-style';
+import { setMute, setVolume } from '@/services/playerSlice';
+import { RootState } from '@/store';
 import { FiVolume1, FiVolumeX } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
 
-interface VolumeControlProps {
-	value: number;
-	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	muted: boolean;
-	onMute: () => void;
-}
+const VolumeControl = () => {
+	const dispatch = useDispatch();
+	const { volume, muted } = useSelector((state: RootState) => state.player);
 
-const VolumeControl = (props: VolumeControlProps) => {
-	const { muted, onMute, ...rest } = props;
-
-	const volumeStyle = {
-		background: `linear-gradient(to right, #ffffff ${
-			props.value * 100
-		}%, #9ca3af ${props.value * 100}% 100%)`,
-	};
+	const volumeStyle = generateRangeStyle(volume);
 
 	return (
-		<div className="flex group">
-			<div className="flex items-center justify-center h-12 min-w-[48px] max-w-full cursor-pointer">
-				<button onClick={onMute}>
-					{props.value === 0 || muted ? (
-						<FiVolumeX className="h-6 w-6 fill-white text-white shrink-0" />
-					) : (
-						<FiVolume1 className="h-6 w-6 fill-white text-white shrink-0" />
-					)}
-				</button>
-			</div>
-			<div className="flex items-center">
-				<input
-					id="volume-range-input"
-					className="rounded-lg appearance-none h-1 w-16"
-					type="range"
-					min={0}
-					max={1}
-					step={0.1}
-					{...rest}
-					style={volumeStyle}
-				/>
-			</div>
+		<div className="flex group items-center">
+			<button onClick={() => dispatch(setMute())}>
+				{volume === 0 || muted ? (
+					<FiVolumeX className="h-6 w-6 fill-foreground text-foreground shrink-0" />
+				) : (
+					<FiVolume1 className="h-6 w-6 fill-foreground text-foreground shrink-0" />
+				)}
+			</button>
+			<input
+				id="volume-range-input"
+				className="rounded-lg appearance-none h-1 w-16 ml-1"
+				type="range"
+				min={0}
+				max={1}
+				step={0.1}
+				value={volume}
+				onChange={e => dispatch(setVolume(e.target.value))}
+				style={volumeStyle}
+			/>
 		</div>
 	);
 };

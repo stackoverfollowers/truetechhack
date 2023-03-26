@@ -7,6 +7,13 @@ interface ProgressProps {
 	loadedSeconds: number;
 }
 
+interface Filters {
+	brightness: number;
+	contrast: number;
+	saturation: number;
+	sharpness: number;
+}
+
 interface PlayerState {
 	url: string | null;
 	pip: boolean;
@@ -21,10 +28,7 @@ interface PlayerState {
 	duration: number;
 	playbackRate: number;
 	loop: boolean;
-	brightness: number;
-	contrast: number;
-	saturation: number;
-	sharpness: number;
+	filters: Filters;
 }
 
 const initialState: PlayerState = {
@@ -46,10 +50,12 @@ const initialState: PlayerState = {
 	duration: 0,
 	playbackRate: 1.0,
 	loop: false,
-	brightness: 100,
-	contrast: 100,
-	saturation: 100,
-	sharpness: 100,
+	filters: {
+		brightness: 100,
+		contrast: 100,
+		saturation: 100,
+		sharpness: 0,
+	},
 };
 
 const playerSlice = createSlice({
@@ -98,16 +104,16 @@ const playerSlice = createSlice({
 			state.duration = action.payload;
 		},
 		setBrightness: (state, action: PayloadAction<string>) => {
-			state.brightness = parseInt(action.payload);
+			state.filters.brightness = parseInt(action.payload);
 		},
 		setContrast: (state, action: PayloadAction<string>) => {
-			state.contrast = parseInt(action.payload);
+			state.filters.contrast = parseInt(action.payload);
 		},
 		setSaturation: (state, action: PayloadAction<string>) => {
-			state.saturation = parseInt(action.payload);
+			state.filters.saturation = parseInt(action.payload);
 		},
 		setSharpness: (state, action: PayloadAction<string>) => {
-			state.sharpness = parseInt(action.payload);
+			state.filters.sharpness = parseInt(action.payload);
 		},
 	},
 });

@@ -2,8 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-.video-filter {
-	filter: grayscale(100%) brightness(50%) contrast(200%);
+@layer base {
+	[data-theme='default'] {
+		/* black */
+		--background-color: 0, 0, 0;
+		/* white */
+		--foreground-color: 255, 255, 255;
+
+		--primary-color: 250, 204, 21;
+
+		--accents-1: 250, 250, 250;
+		--accents-2: 245, 245, 245;
+		--accents-3: 228, 228, 231;
+		--accents-4: 212, 212, 217;
+		--accents-5: 161, 161, 170;
+		/* zinc-500 */
+		--accents-6: 113, 113, 122;
+		--accents-7: 82, 82, 91;
+		/* zinc-700 */
+		--accents-8: 63, 63, 70;
+		--accents-9: 39, 39, 42;
+		/* zinc-900 */
+		--accents-10: 24, 24, 27;
+	}
+
+	[data-theme='prot'] {
+		--background-color: 0, 0, 0;
+		--foreground-color: 255, 255, 255;
+
+		--primary-color: 235, 208, 29;
+
+		--accents-1: 254, 249, 249;
+		--accents-2: 248, 242, 244;
+		--accents-3: 231, 226, 230;
+		--accents-4: 214, 210, 214;
+		--accents-5: 161, 159, 168;
+		--accents-6: 113, 112, 121;
+		--accents-7: 83, 83, 91;
+		--accents-8: 65, 65, 72;
+		--accents-9: 44, 43, 46;
+		--accents-10: 30, 30, 33;
+	}
+
+	[data-theme='deut'] {
+		--background-color: 0, 0, 0;
+		--foreground-color: 255, 255, 255;
+
+		--primary-color: 255, 199, 101;
+
+		--accents-1: 255, 248, 250;
+		--accents-2: 255, 240, 245;
+		--accents-3: 248, 220, 232;
+		--accents-4: 230, 205, 217;
+		--accents-5: 172, 155, 170;
+		--accents-6: 120, 110, 122;
+		--accents-7: 88, 81, 92;
+		--accents-8: 69, 64, 72;
+		--accents-9: 47, 42, 46;
+		--accents-10: 32, 30, 33;
+	}
+
+	[data-theme='trit'] {
+		--background-color: 0, 0, 0;
+		--foreground-color: 255, 255, 255;
+
+		--primary-color: 255, 191, 203;
+
+		--accents-1: 251, 249, 255;
+		--accents-2: 246, 242, 255;
+		--accents-3: 230, 225, 243;
+		--accents-4: 213, 209, 225;
+		--accents-5: 160, 159, 171;
+		--accents-6: 112, 112, 121;
+		--accents-7: 83, 83, 90;
+		--accents-8: 65, 65, 70;
+		--accents-9: 43, 43, 47;
+		--accents-10: 30, 30, 33;
+	}
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
@@ -13,7 +88,7 @@
 		appearance: none;
 		height: 12px;
 		cursor: pointer;
-		background: #fff;
+		background: rgb(var(--foreground-color));
 		border-radius: 50%;
 	}
 }
@@ -25,7 +100,19 @@
 		appearance: none;
 		height: 12px;
 		cursor: pointer;
-		background: #facc15;
+		background: rgb(var(--primary-color));
+		border-radius: 50%;
+	}
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	#filter-range::-webkit-slider-thumb {
+		width: 12px;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 12px;
+		cursor: pointer;
+		background: rgb(var(--foreground-color));
 		border-radius: 50%;
 	}
 }

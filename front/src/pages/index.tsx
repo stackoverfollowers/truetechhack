@@ -1,4 +1,6 @@
 import Layout from '@/components/Layout';
+import Button from '@/components/ui/Button';
+import ThemeSwitch from '@/components/ui/ThemeSwitch';
 import dynamic from 'next/dynamic';
 // import VideoPlayer from '@/components/VideoPlayer';
 import { ReactElement, useRef } from 'react';
@@ -11,6 +13,7 @@ const Home = () => {
 
 	return (
 		<div className="w-full max-w-7xl">
+			<ThemeSwitch />
 			<VideoPlayer playerRef={playerRef} />
 		</div>
 	);

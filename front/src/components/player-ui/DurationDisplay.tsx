@@ -1,14 +1,14 @@
-interface DurationDisplayProps {
-	duration: number;
-	played: number;
-}
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
 
-const DurationDisplay = ({ duration, played }: DurationDisplayProps) => {
-	function pad(str: any) {
-		return ('0' + str).slice(-2);
-	}
+const DurationDisplay = () => {
+	const { duration, progress } = useSelector(
+		(state: RootState) => state.player
+	);
 
-	function format(seconds: number) {
+	const pad = (str: any) => ('0' + str).slice(-2);
+
+	const format = (seconds: number) => {
 		const date = new Date(seconds * 1000);
 		const hh = date.getUTCHours();
 		const mm = date.getUTCMinutes();
@@ -17,13 +17,13 @@ const DurationDisplay = ({ duration, played }: DurationDisplayProps) => {
 			return `${hh}:${pad(mm)}:${ss}`;
 		}
 		return `${mm}:${ss}`;
-	}
+	};
 
 	return (
 		<>
-			<span className="flex items-center text-sm text-white">
-				<span>{format(played)}</span>
-				<span>/</span>
+			<span className="flex items-center text-sm font-mono tracking-tighter">
+				<span>{format(duration * progress.played)}</span>
+				<span className="px-[2px]">/</span>
 				<span>{format(duration)}</span>
 			</span>
 		</>
