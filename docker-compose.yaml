@@ -4,7 +4,7 @@ services:
     image: postgres:14
     restart: on-failure
     ports:
-      - "5432:5432"
+      - "5433:${POSTGRES_PORT:-5432}"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
