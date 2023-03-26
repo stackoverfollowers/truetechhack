@@ -18,12 +18,18 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(username: str) -> str:
-    expires_delta = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expires_delta = datetime.utcnow() + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
     encode_data = {"exp": expires_delta, "username": username}
     return jwt.encode(encode_data, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM)
 
 
 def create_refresh_token(username: str) -> str:
-    expires_delta = datetime.utcnow() + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    expires_delta = datetime.utcnow() + timedelta(
+        minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
+    )
     encode_data = {"exp": expires_delta, "username": username}
-    return jwt.encode(encode_data, settings.JWT_REFRESH_SECRET_KEY, settings.JWT_ALGORITHM)
+    return jwt.encode(
+        encode_data, settings.JWT_REFRESH_SECRET_KEY, settings.JWT_ALGORITHM
+    )

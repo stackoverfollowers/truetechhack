@@ -24,8 +24,9 @@ class Settings(BaseSettings):
             path=f'/{values.get("POSTGRES_DB") or ""}',
             port=f'{values.get("POSTGRES_PORT") or ""}',
         )
-        
+
     TORTOISE_DB_URI: Optional[str] = None
+
     @validator("TORTOISE_DB_URI", pre=True)
     def assemble_tortoise_db_uri(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
@@ -80,7 +81,7 @@ class Settings(BaseSettings):
     JWT_ALGORITHM = "HS256"
     CHUNK_SIZE = 1024 * 1024
 
-    ADMINS_USERNAMES = ["amdin"]
+    ADMINS_USERNAMES = ["admin"]
 
 
 @lru_cache()

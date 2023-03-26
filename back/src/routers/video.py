@@ -16,6 +16,7 @@ from starlette import status
 from constants import get_settings
 from dependencies import get_video, ensure_admin
 from schemas import UploadedVideoSchema, UploadedVideoInfoSchema
+from tasks import preprocess_video
 from db.models import UploadedVideo
 
 settings = get_settings()
@@ -36,7 +37,7 @@ async def get_video_info(video: UploadedVideo = Depends(get_video)):
 async def upload_video(file: UploadFile = File(...)):
     filename = file.filename
     content_type = file.content_type
-    if content_type != "video/mp4":
+    if not content_type.startswith("video/"):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Files with content-type {content_type} is not supported",
@@ -45,6 +46,7 @@ async def upload_video(file: UploadFile = File(...)):
     with open(path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     video = await UploadedVideo.create(filename=filename, path=path)
+    preprocess_video.delay(video_id=video.id)
     return await UploadedVideoSchema.from_tortoise_orm(video)
 
 
