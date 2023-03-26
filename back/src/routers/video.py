@@ -1,11 +1,11 @@
 import shutil
 import uuid
+from pathlib import Path
 
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Header, Response
 from starlette import status
-from starlette.responses import StreamingResponse
 
-from constants import STATIC_PATH
+from constants import STATIC_PATH, CHUNK_SIZE
 from dependencies import get_video, ensure_admin
 from models import UploadedVideo_Pydantic, UploadedVideoInfo_Pydantic
 from db.models import UploadedVideo
@@ -23,7 +23,7 @@ async def get_video_info(video: UploadedVideo = Depends(get_video)):
     response_model=UploadedVideo_Pydantic,
     dependencies=(Depends(ensure_admin),),
 )
-async def upload_video(file: UploadFile = File()):
+async def upload_video(file: UploadFile = File(...)):
     filename = file.filename
     content_type = file.content_type
     if content_type != "video/mp4":
@@ -39,14 +39,23 @@ async def upload_video(file: UploadFile = File()):
 
 
 @router.get("/stream/{video_id}", status_code=206)
-async def get_stream(video: UploadedVideo = Depends(get_video)):
+async def get_stream(
+        video: UploadedVideo = Depends(get_video),
+        video_range=Header(alias="range")
+):
     video_path = video.path
-
-    def iter_file():
-        with open(video_path, "rb") as video_file:
-            yield from video_file
-
-    return StreamingResponse(iter_file(), status_code=206, media_type="video/mp4")
+    start, end = video_range.replace("bytes=", "").split("-")
+    start = int(start)
+    end = int(end) if end else start + CHUNK_SIZE
+    with open(video_path, "rb") as video:
+        video.seek(start)
+        data = video.read(end - start)
+        filesize = str(Path(video_path).stat().st_size)
+        headers = {
+            'Content-Range': f'bytes {start}-{end}/{filesize}',
+            'Accept-Ranges': 'bytes'
+        }
+        return Response(data, status_code=206, headers=headers, media_type="video/mp4")
 
 
 @router.delete(
