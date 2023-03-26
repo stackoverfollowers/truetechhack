@@ -1,13 +1,9 @@
-//  className=""
-
 import cn from 'clsx';
 import React, {
 	forwardRef,
 	ButtonHTMLAttributes,
 	JSXElementConstructor,
-	useRef,
 } from 'react';
-// import s from './Button.module.css';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	href?: string;

@@ -17,6 +17,7 @@ specifiers:
   react-icons: ^4.8.0
   react-player: ^2.12.0
   react-redux: ^8.0.5
+  screenfull: ^6.0.2
   tailwindcss: ^3.2.7
   typescript: 5.0.2
 
@@ -35,6 +36,7 @@ dependencies:
   react-icons: 4.8.0_react@18.2.0
   react-player: 2.12.0_react@18.2.0
   react-redux: 8.0.5_3xleytyzprlgycb2ded54tx72i
+  screenfull: 6.0.2
   typescript: 5.0.2
 
 devDependencies:
@@ -2277,6 +2279,11 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
+
+  /screenfull/6.0.2:
+    resolution: {integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==}
+    engines: {node: ^14.13.1 || >=16.0.0}
     dev: false
 
   /semver/6.3.0:

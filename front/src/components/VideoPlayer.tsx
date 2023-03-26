@@ -7,11 +7,12 @@ import {
 	setMute,
 	setProgress,
 } from '@/services/playerSlice';
-import { FiPause, FiPlay } from 'react-icons/fi';
+import { FiMaximize2, FiPause, FiPlay } from 'react-icons/fi';
 import VolumeControl from './player-ui/VolumeControl';
 import DurationDisplay from './player-ui/DurationDisplay';
 import Seek from './player-ui/Seek';
 import ReactPlayer from 'react-player/lazy';
+import screenfull from 'screenfull';
 
 interface VideoPlayerProps {
 	playerRef: any;
@@ -25,8 +26,14 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 		filter: `brightness(${player.brightness}%) contrast(${player.contrast}%) saturate(${player.saturation}%) brightness(${player.sharpness}%)`,
 	};
 
+	const handleClickFullscreen = () => {
+		if (playerRef.current) {
+			screenfull.request(playerRef.current.wrapper);
+		}
+	};
+
 	return (
-		<div className="relative group h-full w-full">
+		<div className="relative group h-full w-full group">
 			<ReactPlayer
 				ref={playerRef}
 				width="100%"
@@ -39,16 +46,19 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 						dispatch(setProgress(state));
 					}
 				}}
-				url="https://2c57-95-79-218-232.eu.ngrok.io/stream/2"
-				// url="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+				url="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
 			/>
-			<div className="flex flex-col absolute bottom-2 items-center h-12 px-3 w-full ">
+			<div
+				onClick={() => dispatch(setPlayPause())}
+				className="h-[90%] w-full z-10 absolute inset-0"
+			/>
+			<div className="flex-col absolute bottom-2 items-center h-12 px-3 w-full transition-opacity group-hover:opacity-100 flex opacity-1000">
 				{/* Progress bar */}
 				<div className="flex items-center w-full h-10 bottom-16">
 					<Seek ref={playerRef} />
 				</div>
 				{/* Controls */}
-				<div className="flex w-full px-2">
+				<div className="flex justify-between w-full px-2">
 					{/* Left controls */}
 					<div className="flex flex-1 whitespace-nowrap overflow-hidden gap-x-4">
 						{player.playing ? (
@@ -81,6 +91,12 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 					</div>
 
 					{/* Right controls */}
+					<div className="flex items-center">
+						<FiMaximize2
+							className="h-6 w-6 fill-white text-white shrink-0"
+							onClick={handleClickFullscreen}
+						/>
+					</div>
 				</div>
 			</div>
 

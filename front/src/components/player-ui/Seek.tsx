@@ -16,7 +16,7 @@ const Seek = forwardRef((props, ref) => {
 	return (
 		<input
 			id="progress-range-input"
-			className="appearance-none h-2 w-full"
+			className="appearance-none h-2 w-full cursor-pointer"
 			type="range"
 			min={0}
 			max={0.999999}
