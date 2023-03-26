@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.video-filter {
+	filter: grayscale(100%) brightness(50%) contrast(200%);
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	#volume-range-input::-webkit-slider-thumb {
+		width: 12px;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 12px;
+		cursor: pointer;
+		background: #fff;
+		border-radius: 50%;
+	}
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+	#progress-range-input::-webkit-slider-thumb {
+		width: 12px;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 12px;
+		cursor: pointer;
+		background: #facc15;
+		border-radius: 50%;
+	}
+}

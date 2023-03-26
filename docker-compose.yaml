@@ -1,0 +1,60 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  back:
+    depends_on:
+      - db
+    restart: on-failure
+
+    command: uvicorn main:app --host 0.0.0.0 --port ${BACK_PORT:-3001}
+    
+    build:
+      context: ./back/
+      dockerfile: Dockerfile
+    ports:
+      - "3001:${BACK_PORT}"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      
+      STATIC_PATH: ${STATIC_PATH:-/static}
+
+  front:
+    depends_on:
+      - back
+    build:
+      context: ./front/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:${FRONT_PORT:-3000}"
+
+  nginx:
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - front
+    environment:
+      FRONT_PORT: ${FRONT_PORT:-3000}
+
+volumes:
+  postgres_data:
+    driver: local

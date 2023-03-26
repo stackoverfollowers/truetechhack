@@ -1,0 +1,8 @@
+FROM python:3.10
+
+WORKDIR /src
+ADD  /requirements.txt /on_build.sh /
+
+RUN pip3 install -r /requirements.txt
+RUN /on_build.sh
+ADD /src /src
