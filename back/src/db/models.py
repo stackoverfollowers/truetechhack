@@ -22,5 +22,13 @@ class UploadedVideo(Model):
     id = fields.IntField(pk=True)
     filename = fields.CharField(max_length=255)
     path = fields.CharField(max_length=255, unique=True)
+    preprocessed = fields.BooleanField(default=False)
     created_at = fields.DatetimeField(auto_now_add=True)
     last_modified_at = fields.DatetimeField(auto_now=True)
+
+
+class EpilepticTiming(Model):
+    id = fields.IntField(pk=True)
+    video = fields.ForeignKeyField("models.UploadedVideo")
+    start_time = fields.IntField()
+    end_time = fields.IntField()
