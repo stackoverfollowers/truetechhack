@@ -6,16 +6,20 @@ from jose import jwt
 from pydantic import ValidationError
 from starlette import status
 
-from constants import JWT_SECRET_KEY, JWT_ALGORITHM, ADMINS_USERNAMES
-from models import TokenPayload
+from constants import get_settings
+from schemas import TokenPayload
 from db.models import User, Preferences, UploadedVideo
+
+settings = get_settings()
 
 oauth = OAuth2PasswordBearer(tokenUrl="/login", scheme_name="JWT")
 
 
 async def get_current_user(token: str = Depends(oauth)) -> User:
     try:
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(
+            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+        )
         token_data = TokenPayload(**payload)
 
         if datetime.fromtimestamp(token_data.exp) < datetime.now():
@@ -57,5 +61,5 @@ async def get_video(video_id: int) -> UploadedVideo:
 
 async def ensure_admin(user: User = Depends(get_current_user)):
     # Бичевская реализация "админки :)"
-    if user.username not in ADMINS_USERNAMES:
+    if user.username not in settings.ADMINS_USERNAMES:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")
