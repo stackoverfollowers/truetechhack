@@ -29,6 +29,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-app}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       POSTGRES_HOST: ${POSTGRES_HOST:-db}
+
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-secret}
+      JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY:-secret2}
       
       STATIC_PATH: ${STATIC_PATH:-/static}
     volumes:

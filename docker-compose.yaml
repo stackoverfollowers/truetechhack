@@ -34,6 +34,9 @@ services:
       
       STATIC_PATH: ${STATIC_PATH:-/static}
 
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-secret}
+      JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY:-secret2}
+
   front:
     depends_on:
       - back
