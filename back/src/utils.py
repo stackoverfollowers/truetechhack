@@ -2,13 +2,9 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt
 
-from constants import (
-    JWT_SECRET_KEY,
-    REFRESH_TOKEN_EXPIRE_MINUTES,
-    JWT_REFRESH_SECRET_KEY,
-    JWT_ALGORITHM,
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-)
+from constants import get_settings
+
+settings = get_settings()
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -22,13 +18,12 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(username: str) -> str:
-    expires_delta = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expires_delta = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     encode_data = {"exp": expires_delta, "username": username}
-    print(JWT_SECRET_KEY, JWT_ALGORITHM)
-    return jwt.encode(encode_data, JWT_SECRET_KEY, JWT_ALGORITHM)
+    return jwt.encode(encode_data, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM)
 
 
 def create_refresh_token(username: str) -> str:
-    expires_delta = datetime.utcnow() + timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
+    expires_delta = datetime.utcnow() + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
     encode_data = {"exp": expires_delta, "username": username}
-    return jwt.encode(encode_data, JWT_REFRESH_SECRET_KEY, JWT_ALGORITHM)
+    return jwt.encode(encode_data, settings.JWT_REFRESH_SECRET_KEY, settings.JWT_ALGORITHM)

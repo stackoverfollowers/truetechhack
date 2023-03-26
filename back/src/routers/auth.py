@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from models import UserIn_Pydantic, User_Pydantic, Token
+from schemas import UserInSchema, UserSchema, Token
 from utils import (
     get_hashed_password,
     verify_password,
@@ -14,8 +14,8 @@ from db.models import User, Preferences
 router = APIRouter()
 
 
-@router.post("/signup", response_model=User_Pydantic)
-async def create_user(data: UserIn_Pydantic):
+@router.post("/signup", response_model=UserSchema)
+async def create_user(data: UserInSchema):
     user = await User.get_or_none(username=data.username)
     if user is not None:
         raise HTTPException(
@@ -26,7 +26,7 @@ async def create_user(data: UserIn_Pydantic):
         username=data.username, password=get_hashed_password(data.password)
     )
     await Preferences.create(user=user)
-    return await User_Pydantic.from_tortoise_orm(user)
+    return await UserSchema.from_tortoise_orm(user)
 
 
 @router.post("/login", response_model=Token)
