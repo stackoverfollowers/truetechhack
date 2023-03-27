@@ -2,20 +2,26 @@ import { useUser } from '@/hooks/use-user';
 import Link from 'next/link';
 import Button from './Button';
 
-const LoginButton = () => {
+interface LoginButtonProps {
+	className?: string;
+}
+
+const LoginButton = ({ className }: LoginButtonProps) => {
 	const { user } = useUser();
 	console.log('LoginButton user', user);
 
 	if (user) {
 		return (
 			<>
-				<Button onClick={() => {}}>Выйти</Button>
+				<Button className={className} onClick={() => {}}>
+					Выйти
+				</Button>
 			</>
 		);
 	}
 	return (
 		<>
-			<Button Component={Link} href="/auth/signin">
+			<Button Component={Link} className={className} href="/auth/signin">
 				Войти
 			</Button>
 		</>

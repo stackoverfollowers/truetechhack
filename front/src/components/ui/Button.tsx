@@ -1,4 +1,4 @@
-import cn from 'clsx';
+import cx from 'clsx';
 import React, {
 	forwardRef,
 	ButtonHTMLAttributes,
@@ -25,7 +25,10 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 
 	return (
 		<Component
-			className="rounded-md py-[5px] px-3 text-sm font-semibold shadow-sm outline-none bg-accents-6 text-accents-2 hover:bg-accents-5"
+			className={cx(
+				className,
+				'rounded-md py-[5px] px-3 text-sm font-semibold text-center outline-none bg-accents-1 text-black hover:bg-accents-3'
+			)}
 			style={{ width, ...style }}
 			{...rest}
 		>

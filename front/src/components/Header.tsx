@@ -79,20 +79,22 @@ const Header = () => {
 							<FiX className="h-6 w-6 text-accents-2" aria-hidden="true" />
 						</button>
 					</div>
-					<div className="mt-6 flow-root">
-						<div className="-my-6">
-							<div className="space-y-2 py-6 text-base">
-								{navigation.map(({ label, href }, i) => (
-									<a
-										href={href}
-										key={i}
-										className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 relative transition hover:text-primary"
-									>
-										{label}
-									</a>
-								))}
-							</div>
+					<div className="mt-6 ">
+						<div className="space-y-2 text-base">
+							{navigation.map(({ label, href }, i) => (
+								<a
+									href={href}
+									key={i}
+									className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 relative transition hover:text-primary"
+								>
+									{label}
+								</a>
+							))}
 						</div>
+					</div>
+					<div className="mt-4 mb-8 border-t border-accents-8" />
+					<div className="flex w-full">
+						<LoginButton className="w-full" />
 					</div>
 				</Dialog.Panel>
 			</Dialog>
