@@ -3,10 +3,10 @@ from starlette.middleware.cors import CORSMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 
 from constants import get_settings
-from dependencies import get_current_user, get_user_preferences
-from schemas import UserSchema, PreferencesSchema
-from db.models import User, Preferences
-from routers import auth_router, video_router
+from dependencies import get_current_user
+from schemas import UserSchema
+from db.models import User
+from routers import auth_router, video_router, preferences_router
 
 from fastapi_pagination import add_pagination
 
@@ -20,12 +20,9 @@ def create_app():
     async def get_me(user: User = Depends(get_current_user)):
         return await UserSchema.from_tortoise_orm(user)
 
-    @app.get("/preferences")
-    async def get_preferences(preferences: Preferences = Depends(get_user_preferences)):
-        return await PreferencesSchema.from_tortoise_orm(preferences)
-
     app.include_router(auth_router)
     app.include_router(video_router)
+    app.include_router(preferences_router)
     add_pagination(app)
     app.add_middleware(
         CORSMiddleware,
