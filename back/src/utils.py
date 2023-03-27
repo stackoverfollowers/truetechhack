@@ -1,12 +1,21 @@
-from passlib.context import CryptContext
+import enum
 from datetime import datetime, timedelta
+
 from jose import jwt
+from passlib.context import CryptContext
 
 from constants import get_settings
 
 settings = get_settings()
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class SiteTheme(str, enum.Enum):
+    default = "default"
+    prot = "prot"
+    deut = "deut"
+    trit = "trit"
 
 
 def get_hashed_password(password: str) -> str:
