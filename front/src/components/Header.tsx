@@ -13,7 +13,7 @@ const Header = () => {
 	const navigation = [
 		{
 			label: 'Главная',
-			href: '#',
+			href: '/',
 		},
 		{
 			label: 'Фильмы',
@@ -31,7 +31,7 @@ const Header = () => {
 				className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
 				aria-label="Global"
 			>
-				<div className="flex lg:flex-1 shrink-0">
+				<div className="flex shrink-0 mr-4">
 					<img
 						className="h-8 w-auto"
 						src="https://tailwindui.com/img/logos/mark.svg?color=white"
@@ -43,12 +43,12 @@ const Header = () => {
 						<FiMenu className="h-6 w-6" aria-hidden="true" />
 					</button>
 				</div>
-				<div className="hidden sm:flex">
+				<div className="hidden sm:flex sm:gap-x-4">
 					{navigation.map(({ label, href }, i) => (
 						<Link
 							href={href}
 							key={i}
-							className="text-base px-4 font-semibold relative block transition hover:text-primary"
+							className="text-base font-semibold relative block transition hover:text-primary"
 						>
 							{label}
 						</Link>
@@ -60,6 +60,7 @@ const Header = () => {
 					<LoginButton />
 				</div>
 			</nav>
+
 			<Dialog
 				as="div"
 				className="sm:hidden"
@@ -91,6 +92,13 @@ const Header = () => {
 								</a>
 							))}
 						</div>
+					</div>
+					<div className="my-4 border-t border-accents-8" />
+					<div className="flex items-center justify-between w-fit gap-x-8">
+						<span className="text-base font-semibold leading-7">
+							Настройка темы
+						</span>
+						<ThemeSwitch />
 					</div>
 					<div className="mt-4 mb-8 border-t border-accents-8" />
 					<div className="flex w-full">
