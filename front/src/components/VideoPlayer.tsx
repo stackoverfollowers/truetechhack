@@ -14,6 +14,9 @@ import PlayPauseButton from './player-ui/PlayPauseButton';
 import screenfull from 'screenfull';
 import Filters from './player-ui/FiltersButton';
 import { FiMaximize2 } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { Transition } from '@headlessui/react';
+import cx from 'clsx';
 
 interface VideoPlayerProps {
 	playerRef: any;
@@ -23,6 +26,8 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	const dispatch = useDispatch();
 	const { seeking, ...rest } = useSelector((state: RootState) => state.player);
 	const theme = useSelector((state: RootState) => state.theme);
+
+	const [showOverlay, setShowOverlay] = useState(false);
 
 	const colorBlindFilters = {
 		default: '',
@@ -45,6 +50,24 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 		}
 	};
 
+	const badFrames = [5, 6, 7, 8, 9, 10, 20, 30]; // show the overlay at these seconds
+
+	useEffect(() => {
+		const isBadFrame = badFrames.some(frame => {
+			return Math.abs(rest.progress.playedSeconds - frame) <= 1;
+		});
+
+		setShowOverlay(isBadFrame);
+	}, [rest.progress.playedSeconds]);
+
+	// useEffect(() => {
+	// 	if (badFrames.includes(Math.floor(rest.progress.playedSeconds))) {
+	// 		setShowOverlay(true);
+	// 	} else {
+	// 		setShowOverlay(false);
+	// 	}
+	// }, [rest.progress.playedSeconds]);
+
 	return (
 		<div className="relative group h-full w-full group">
 			<ReactPlayer
@@ -62,6 +85,20 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				onEnded={() => dispatch(setStop())}
 				url="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
 			/>
+			<Transition
+				show={showOverlay}
+				enter="transition-opacity duration-500"
+				enterFrom="opacity-0"
+				enterTo="opacity-100"
+				leave="transition-opacity duration-500"
+				leaveFrom="opacity-100"
+				leaveTo="opacity-0"
+			>
+				<div className="absolute inset-0 bg-black h-full w-full pointer-events-none" />
+			</Transition>
+			{/* {showOverlay && (
+				<div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none h-full w-full" />
+			)} */}
 			<div
 				onClick={() => dispatch(setPlayPause())}
 				className="h-[90%] w-full z-10 absolute inset-0"
