@@ -2,6 +2,7 @@ import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { useSignupMutation } from '@/services/auth';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, ReactElement, useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
@@ -87,6 +88,16 @@ const SignUp = () => {
 							</div>
 						</div>
 						{error && <span className="text-error text-sm">{error}</span>}
+
+						<div className="flex text-sm items-center justify-between">
+							<span>Уже есть аккаунт?</span>
+							<Link
+								href="/auth/signin"
+								className="font-medium text-primary hover:text-primary"
+							>
+								Войти
+							</Link>
+						</div>
 
 						<Button className="w-full" type="submit" disabled={isLoading}>
 							Создать аккаунт
