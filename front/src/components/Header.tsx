@@ -4,6 +4,7 @@ import { Dialog } from '@headlessui/react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import Link from 'next/link';
 import Input from './ui/Input';
+import ThemeSwitch from './ui/ThemeSwitch';
 
 const Header = () => {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,7 +53,8 @@ const Header = () => {
 						</Link>
 					))}
 				</div>
-				<div className="hidden sm:flex sm:flex-1 sm:justify-end">
+				<div className="hidden sm:flex sm:flex-1 sm:justify-end sm:items-center gap-x-2">
+					<ThemeSwitch />
 					<Input placeholder="Поиск" />
 				</div>
 			</nav>
