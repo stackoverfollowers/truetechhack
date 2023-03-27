@@ -29,10 +29,8 @@ const Seek = forwardRef((props, ref) => {
 			onMouseUp={e => {
 				dispatch(setSeeking(false));
 				// @ts-ignore
-				console.log('e.target.value', e.target.value);
 				// @ts-ignore
 				ref.current?.seekTo(parseFloat(e.target.value));
-				console.log('ref', ref);
 			}}
 			{...props}
 		/>

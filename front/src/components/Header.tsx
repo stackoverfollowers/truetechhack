@@ -26,7 +26,7 @@ const Header = () => {
 	];
 
 	return (
-		<header className="shadow mb-12 text-sm font-medium ring-1 bg-accents-10 ring-white/10">
+		<header className="shadow mb-12 ring-1 bg-accents-10 ring-white/10">
 			<nav
 				className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
 				aria-label="Global"
