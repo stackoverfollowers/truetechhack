@@ -9,6 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	href?: string;
 	className?: string;
 	type?: 'submit' | 'reset' | 'button';
+	variant?: 'default' | 'primary';
 	Component?: string | JSXElementConstructor<any>;
 	width?: string | number;
 }
@@ -18,6 +19,7 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 		className,
 		children,
 		width,
+		variant = 'default',
 		style = {},
 		Component = 'button',
 		...rest
