@@ -5,6 +5,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import Link from 'next/link';
 import Input from './ui/Input';
 import ThemeSwitch from './ui/ThemeSwitch';
+import LoginButton from './ui/LoginButton';
 
 const Header = () => {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -56,6 +57,7 @@ const Header = () => {
 				<div className="hidden sm:flex sm:flex-1 sm:justify-end sm:items-center gap-x-2">
 					<ThemeSwitch />
 					<Input placeholder="Поиск" />
+					<LoginButton />
 				</div>
 			</nav>
 			<Dialog

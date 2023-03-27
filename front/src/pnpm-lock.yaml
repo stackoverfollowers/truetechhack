@@ -18,6 +18,8 @@ specifiers:
   react-icons: ^4.8.0
   react-player: ^2.12.0
   react-redux: ^8.0.5
+  redux: ^4.2.1
+  redux-persist: ^6.0.0
   screenfull: ^6.0.2
   tailwindcss: ^3.2.7
   typescript: 5.0.2
@@ -37,7 +39,9 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.8.0_react@18.2.0
   react-player: 2.12.0_react@18.2.0
-  react-redux: 8.0.5_3xleytyzprlgycb2ded54tx72i
+  react-redux: 8.0.5_ctrls2ti7t7iutxbwkm5ipogyy
+  redux: 4.2.1
+  redux-persist: 6.0.0_react@18.2.0+redux@4.2.1
   screenfull: 6.0.2
   typescript: 5.0.2
 
@@ -294,7 +298,7 @@ packages:
     dependencies:
       immer: 9.0.19
       react: 18.2.0
-      react-redux: 8.0.5_3xleytyzprlgycb2ded54tx72i
+      react-redux: 8.0.5_ctrls2ti7t7iutxbwkm5ipogyy
       redux: 4.2.1
       redux-thunk: 2.4.2_redux@4.2.1
       reselect: 4.1.7
@@ -2159,7 +2163,7 @@ packages:
       react-fast-compare: 3.2.1
     dev: false
 
-  /react-redux/8.0.5_3xleytyzprlgycb2ded54tx72i:
+  /react-redux/8.0.5_ctrls2ti7t7iutxbwkm5ipogyy:
     resolution: {integrity: sha512-Q2f6fCKxPFpkXt1qNRZdEDLlScsDWyrgSj0mliK59qU6W5gvBiKkdMEG2lJzhd1rCctf0hb6EtePPLZ2e0m1uw==}
     peerDependencies:
       '@types/react': ^16.8 || ^17.0 || ^18.0
@@ -2189,6 +2193,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
+      redux: 4.2.1
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
@@ -2211,6 +2216,19 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /redux-persist/6.0.0_react@18.2.0+redux@4.2.1:
+    resolution: {integrity: sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==}
+    peerDependencies:
+      react: '>=16'
+      redux: '>4.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      redux: 4.2.1
+    dev: false
 
   /redux-thunk/2.4.2_redux@4.2.1:
     resolution: {integrity: sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==}
