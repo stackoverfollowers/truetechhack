@@ -1,14 +1,14 @@
 from datetime import datetime
 
-from fastapi import HTTPException, Depends
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
 from starlette import status
 
 from constants import get_settings
+from db.models import Preferences, UploadedVideo, User
 from schemas import TokenPayload
-from db.models import User, Preferences, UploadedVideo
 
 settings = get_settings()
 

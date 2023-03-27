@@ -4,29 +4,29 @@ from pathlib import Path
 
 from fastapi import (
     APIRouter,
-    UploadFile,
-    File,
-    HTTPException,
     Depends,
+    File,
     Header,
+    HTTPException,
     Response,
+    UploadFile,
 )
 from starlette import status
 
 from constants import get_settings
-from dependencies import get_video, ensure_admin
-from schemas import UploadedVideoSchema, UploadedVideoInfoSchema
-from tasks import preprocess_video
 from db.models import UploadedVideo
+from dependencies import ensure_admin, get_video
+from schemas import UploadedVideoSchema
+from tasks import preprocess_video
 
 settings = get_settings()
 
 router = APIRouter()
 
 
-@router.get("/video/{video_id}", response_model=UploadedVideoInfoSchema)
+@router.get("/video/{video_id}", response_model=UploadedVideoSchema)
 async def get_video_info(video: UploadedVideo = Depends(get_video)):
-    return await UploadedVideoInfoSchema.from_tortoise_orm(video)
+    return await UploadedVideoSchema.from_orm(video)
 
 
 @router.post(
@@ -47,7 +47,7 @@ async def upload_video(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
     video = await UploadedVideo.create(filename=filename, path=path)
     preprocess_video.delay(video_id=video.id)
-    return await UploadedVideoSchema.from_tortoise_orm(video)
+    return await UploadedVideoSchema.from_orm(video)
 
 
 @router.get("/stream/{video_id}", status_code=206)

@@ -1,7 +1,7 @@
 from functools import lru_cache
-from typing import Any, Optional, Union, Dict
+from typing import Any, Dict, Optional, Union
 
-from pydantic import BaseSettings, PostgresDsn, validator, RedisDsn
+from pydantic import BaseSettings, PostgresDsn, RedisDsn, validator
 
 
 class Settings(BaseSettings):
@@ -24,19 +24,6 @@ class Settings(BaseSettings):
             path=f'/{values.get("POSTGRES_DB") or ""}',
             port=f'{values.get("POSTGRES_PORT") or ""}',
         )
-
-    TORTOISE_DB_URI: Optional[str] = None
-
-    @validator("TORTOISE_DB_URI", pre=True)
-    def assemble_tortoise_db_uri(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
-        if isinstance(v, str):
-            return v
-        pg_user = values.get("POSTGRES_USER")
-        pg_password = values.get("POSTGRES_PASSWORD")
-        pg_host = values.get("POSTGRES_HOST")
-        pg_port = values.get("POSTGRES_PORT")
-        pg_db = values.get("POSTGRES_DB")
-        return f"postgres://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}"
 
     REDIS_HOST: str
     REDIS_PORT: str

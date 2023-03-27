@@ -1,15 +1,15 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from schemas import UserInSchema, UserSchema, Token
+from db.models import Preferences, User
+from schemas import Token, UserInSchema, UserSchema
 from utils import (
-    get_hashed_password,
-    verify_password,
     create_access_token,
     create_refresh_token,
+    get_hashed_password,
+    verify_password,
 )
-from db.models import User, Preferences
 
 router = APIRouter()
 
