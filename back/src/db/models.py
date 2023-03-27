@@ -65,6 +65,11 @@ class UserPreferences(Base, TimestampMixin):
     def __str__(self) -> str:
         return f"UserPreferences (theme: {self.theme})"
 
+    def update_from_dict(self, **kwargs):
+        for field, value in kwargs.items():
+            if hasattr(self, field):
+                setattr(self, field, value)
+
 
 class EpilepticTiming(Base):
     video_id = Column(ForeignKey("video.id"), index=True, nullable=False)

@@ -12,11 +12,11 @@ from fastapi import (
     Response,
     UploadFile,
 )
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
-from starlette import status
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from starlette import status
 
 from constants import get_settings
 from db.engine import get_async_session
@@ -98,5 +98,8 @@ async def delete_video(
 
 
 @router.get("/videos", response_model=Page[UploadedVideoSchema])
-async def get_videos_paginator(preprocessed: bool = True, session: AsyncSession = Depends(get_async_session),):
+async def get_videos_paginator(
+    preprocessed: bool = True,
+    session: AsyncSession = Depends(get_async_session),
+):
     return await paginate(session, select(Video).filter_by(preprocessed=preprocessed))

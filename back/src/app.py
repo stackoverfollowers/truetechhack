@@ -1,12 +1,12 @@
 from fastapi import Depends, FastAPI
+from fastapi_pagination import add_pagination
 from starlette.middleware.cors import CORSMiddleware
 
 from constants import get_settings
 from db.models import User
 from dependencies import get_current_user
-from routers import auth_router, video_router, preferences_router
+from routers import auth_router, preferences_router, video_router
 from schemas import UserSchema
-from fastapi_pagination import add_pagination
 
 settings = get_settings()
 
