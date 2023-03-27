@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { streamApi } from './services/stream';
 import playerReducer from './services/playerSlice';
+import themeReducer from './services/themeSlice';
 
 export const store = configureStore({
 	reducer: {
 		[streamApi.reducerPath]: streamApi.reducer,
 		player: playerReducer,
+		theme: themeReducer,
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware().concat(streamApi.middleware),

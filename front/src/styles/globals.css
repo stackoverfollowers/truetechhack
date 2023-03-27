@@ -4,11 +4,6 @@
 
 @layer base {
 	[data-theme='default'] {
-		/* black */
-		--background-color: 0, 0, 0;
-		/* white */
-		--foreground-color: 255, 255, 255;
-
 		--primary-color: 250, 204, 21;
 
 		--accents-1: 250, 250, 250;
@@ -16,20 +11,14 @@
 		--accents-3: 228, 228, 231;
 		--accents-4: 212, 212, 217;
 		--accents-5: 161, 161, 170;
-		/* zinc-500 */
 		--accents-6: 113, 113, 122;
 		--accents-7: 82, 82, 91;
-		/* zinc-700 */
 		--accents-8: 63, 63, 70;
 		--accents-9: 39, 39, 42;
-		/* zinc-900 */
 		--accents-10: 24, 24, 27;
 	}
 
 	[data-theme='prot'] {
-		--background-color: 0, 0, 0;
-		--foreground-color: 255, 255, 255;
-
 		--primary-color: 235, 208, 29;
 
 		--accents-1: 254, 249, 249;
@@ -45,9 +34,6 @@
 	}
 
 	[data-theme='deut'] {
-		--background-color: 0, 0, 0;
-		--foreground-color: 255, 255, 255;
-
 		--primary-color: 255, 199, 101;
 
 		--accents-1: 255, 248, 250;
@@ -63,9 +49,6 @@
 	}
 
 	[data-theme='trit'] {
-		--background-color: 0, 0, 0;
-		--foreground-color: 255, 255, 255;
-
 		--primary-color: 255, 191, 203;
 
 		--accents-1: 251, 249, 255;
@@ -88,7 +71,7 @@
 		appearance: none;
 		height: 12px;
 		cursor: pointer;
-		background: rgb(var(--foreground-color));
+		background: white;
 		border-radius: 50%;
 	}
 }
@@ -112,7 +95,7 @@
 		appearance: none;
 		height: 12px;
 		cursor: pointer;
-		background: rgb(var(--foreground-color));
+		background: white;
 		border-radius: 50%;
 	}
 }

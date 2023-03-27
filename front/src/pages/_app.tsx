@@ -19,7 +19,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
 	return (
 		<Provider store={store}>
-			<ThemeProvider> {getLayout(<Component {...pageProps} />)}</ThemeProvider>
+			<ThemeProvider defaultTheme="default">
+				{getLayout(<Component {...pageProps} />)}
+			</ThemeProvider>
 		</Provider>
 	);
 }

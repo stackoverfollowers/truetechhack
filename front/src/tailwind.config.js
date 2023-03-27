@@ -11,8 +11,6 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				foreground: 'rgb(var(--foreground-color), <alpha-value>)',
-				background: 'rgb(var(--background-color), <alpha-value>)',
 				primary: 'rgb(var(--primary-color), <alpha-value>)',
 				'accents-1': 'rgb(var(--accents-1), <alpha-value>)',
 				'accents-2': 'rgb(var(--accents-2), <alpha-value>)',

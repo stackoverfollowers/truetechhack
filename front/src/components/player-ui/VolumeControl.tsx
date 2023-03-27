@@ -14,9 +14,9 @@ const VolumeControl = () => {
 		<div className="flex group items-center">
 			<button onClick={() => dispatch(setMute())}>
 				{volume === 0 || muted ? (
-					<FiVolumeX className="h-6 w-6 fill-foreground text-foreground shrink-0" />
+					<FiVolumeX className="h-6 w-6 fill-accents-2 text-accents-2 shrink-0" />
 				) : (
-					<FiVolume1 className="h-6 w-6 fill-foreground text-foreground shrink-0" />
+					<FiVolume1 className="h-6 w-6 fill-accents-2 text-accents-2 shrink-0" />
 				)}
 			</button>
 			<input

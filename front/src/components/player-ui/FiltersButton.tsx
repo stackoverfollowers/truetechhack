@@ -3,7 +3,7 @@ import {
 	setContrast,
 	setSaturation,
 	setSharpness,
-} from '@/services/playerSlice';
+} from '@/services/themeSlice';
 import { RootState } from '@/store';
 import { Popover, Transition } from '@headlessui/react';
 import {
@@ -28,7 +28,7 @@ interface Option extends InputHTMLAttributes<HTMLInputElement> {
 const Filters = () => {
 	const dispatch = useDispatch();
 	const { brightness, contrast, saturation, sharpness } = useSelector(
-		(state: RootState) => state.player.filters
+		(state: RootState) => state.theme.filters
 	);
 
 	const options: Option[] = [
@@ -76,7 +76,7 @@ const Filters = () => {
 				<>
 					<Popover.Button className="flex items-center justify-center h-12 w-12 outline-none">
 						<FiFilter
-							className="h-6 w-6 fill-foreground text-foreground shrink-0 cursor-pointer"
+							className="h-6 w-6 fill-accents-2 text-accents-2 shrink-0 cursor-pointer"
 							aria-hidden="true"
 						/>
 					</Popover.Button>
@@ -90,7 +90,7 @@ const Filters = () => {
 						leaveTo="opacity-0 translate-y-1"
 					>
 						<Popover.Panel className="absolute z-10 mt-3 w-[320px] bottom-10 -right-1/2 transform">
-							<div className="overflow-hidden rounded-lg ring-1 ring-foreground/10 bg-accents-10 ">
+							<div className="overflow-hidden rounded-lg ring-1 ring-white/10 bg-accents-10 ">
 								<div className="relative flex flex-col gap-4 p-2">
 									{options.map(({ label, defaultValue, setValue, ...rest }) => {
 										const filterStyle = generateRangeStyle(
@@ -102,7 +102,7 @@ const Filters = () => {
 												key={label}
 												className="flex items-center rounded-lg transition duration-150 ease-in-out"
 											>
-												<div className="flex h-6 w-fit shrink-0 items-center justify-center text-foreground mr-1">
+												<div className="flex h-6 w-fit shrink-0 items-center justify-center text-accents-2 mr-1">
 													{defaultValue === rest.value ? (
 														<FiChevronRight aria-hidden="true" />
 													) : (

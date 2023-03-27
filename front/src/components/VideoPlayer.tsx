@@ -21,10 +21,22 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	const dispatch = useDispatch();
-	const player = useSelector((state: RootState) => state.player);
+	const { seeking, ...rest } = useSelector((state: RootState) => state.player);
+	const theme = useSelector((state: RootState) => state.theme);
 
-	const style = {
-		filter: `brightness(${player.filters.brightness}%) contrast(${player.filters.contrast}%) saturate(${player.filters.saturation}%) blur(${player.filters.sharpness}px)`,
+	const colorBlindFilters = {
+		default: '',
+		deut: 'grayscale(70%) brightness(150%) contrast(75%) hue-rotate(-40deg)',
+		prot: 'grayscale(80%) brightness(150%) contrast(75%) hue-rotate(-10deg)',
+		trit: 'grayscale(80%) brightness(120%) contrast(125%) hue-rotate(150deg)',
+	};
+
+	const filterStyle = {
+		filter: `brightness(${theme.filters.brightness}%) contrast(${
+			theme.filters.contrast
+		}%) saturate(${theme.filters.saturation}%) blur(${
+			theme.filters.sharpness
+		}px) ${colorBlindFilters[theme.type]}`,
 	};
 
 	const handleClickFullscreen = () => {
@@ -40,10 +52,10 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				width="100%"
 				height="100%"
 				onDuration={v => dispatch(setDuration(v))}
-				{...player}
-				style={style}
+				{...rest}
+				style={filterStyle}
 				onProgress={state => {
-					if (!player.seeking) {
+					if (!seeking) {
 						dispatch(setProgress(state));
 					}
 				}}
@@ -75,7 +87,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 							className="flex items-center justify-center h-12 w-12"
 							onClick={handleClickFullscreen}
 						>
-							<FiMaximize2 className="h-6 w-6 fill-foreground text-foreground shrink-0 cursor-pointer" />
+							<FiMaximize2 className="h-6 w-6 fill-accents-2 text-accents-2 shrink-0 cursor-pointer" />
 						</button>
 					</div>
 				</div>

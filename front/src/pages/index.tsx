@@ -1,5 +1,4 @@
 import Layout from '@/components/Layout';
-import ColorWheel from '@/components/ui/ColorWheel';
 import dynamic from 'next/dynamic';
 import { ReactElement, useRef } from 'react';
 const VideoPlayer = dynamic(() => import('@/components/VideoPlayer'), {
