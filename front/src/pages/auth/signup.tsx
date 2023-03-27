@@ -1,39 +1,31 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { useSigninMutation } from '@/services/auth';
-import { setCredentials } from '@/services/authSlice';
+import { useSignupMutation } from '@/services/auth';
 import { useRouter } from 'next/router';
 import { FormEvent, ReactElement, useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { useDispatch } from 'react-redux';
 
-const SignIn = () => {
+const SignUp = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 
 	const [showPassword, setShowPassword] = useState(false);
 
-	const [signin, { isLoading }] = useSigninMutation();
-	const dispatch = useDispatch();
+	const [signup, { isLoading }] = useSignupMutation();
 
 	const router = useRouter();
 
 	const handleSumbit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const authenticate = async () => {
-			const user = await signin({ username, password }).unwrap();
-
-			console.log('user', user);
-
-			dispatch(setCredentials(user as any));
-
+		const register = async () => {
+			await signup({ username, password }).unwrap();
 			router.push('/');
 		};
 
-		authenticate().catch(() => setError('Что-то пошло не так'));
+		register().catch(() => setError('Что-то пошло не так'));
 	};
 
 	return (
@@ -47,7 +39,7 @@ const SignIn = () => {
 							alt=""
 						/>
 						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
-							Вход в аккаунт
+							Регистрация
 						</h2>
 					</div>
 					<form className="mt-8 space-y-6" onSubmit={handleSumbit}>
@@ -97,7 +89,7 @@ const SignIn = () => {
 						{error && <span className="text-error text-sm">{error}</span>}
 
 						<Button className="w-full" type="submit" disabled={isLoading}>
-							Войти
+							Создать аккаунт
 						</Button>
 					</form>
 				</div>
@@ -106,8 +98,8 @@ const SignIn = () => {
 	);
 };
 
-SignIn.getLayout = function getLayout(page: ReactElement) {
+SignUp.getLayout = function getLayout(page: ReactElement) {
 	return <Layout>{page}</Layout>;
 };
 
-export default SignIn;
+export default SignUp;

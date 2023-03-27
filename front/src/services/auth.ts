@@ -7,7 +7,7 @@ export interface AuthResponse {
 	token: string;
 }
 
-interface LoginPayload {
+interface AuthPayload {
 	username: string;
 	password: string;
 }
@@ -15,7 +15,7 @@ interface LoginPayload {
 export const authApi = createApi({
 	baseQuery,
 	endpoints: builder => ({
-		login: builder.mutation<AuthResponse, LoginPayload>({
+		signin: builder.mutation<AuthResponse, AuthPayload>({
 			query: ({ username, password }) => {
 				const data = new URLSearchParams();
 				data.append('username', username);
@@ -31,7 +31,19 @@ export const authApi = createApi({
 				};
 			},
 		}),
+		signup: builder.mutation<AuthResponse, AuthPayload>({
+			query: data => {
+				return {
+					url: '/api/signup',
+					method: 'POST',
+					body: data,
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				};
+			},
+		}),
 	}),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useSigninMutation, useSignupMutation } = authApi;
