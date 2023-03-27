@@ -4,10 +4,13 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from starlette import status
 
 from constants import get_settings
-from db.models import Preferences, UploadedVideo, User
+from db.engine import get_async_session
+from db.models import User, UserPreferences, Video
 from schemas import TokenPayload
 
 settings = get_settings()
@@ -15,7 +18,9 @@ settings = get_settings()
 oauth = OAuth2PasswordBearer(tokenUrl="/login", scheme_name="JWT")
 
 
-async def get_current_user(token: str = Depends(oauth)) -> User:
+async def get_current_user(
+    token: str = Depends(oauth), session: AsyncSession = Depends(get_async_session)
+) -> User:
     try:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
@@ -35,7 +40,9 @@ async def get_current_user(token: str = Depends(oauth)) -> User:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await User.get_or_none(username=token_data.username)
+    q = select(User).filter_by(username=token_data.username)
+
+    user = (await session.execute(q)).scalars().first()
 
     if user is None:
         raise HTTPException(
@@ -45,13 +52,23 @@ async def get_current_user(token: str = Depends(oauth)) -> User:
     return user
 
 
-async def get_user_preferences(user: User = Depends(get_current_user)) -> Preferences:
-    preferences, _ = await Preferences.get_or_create(user=user)
-    return preferences
+async def get_user_preferences(
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_async_session),
+) -> UserPreferences:
+    q = select(UserPreferences).filter_by(user=user)
+    prefs = (await session.execute(q)).scalars().first()
+    if prefs is not None:
+        return prefs
+    prefs = UserPreferences(user=user)
+    session.add(prefs)
+    return prefs
 
 
-async def get_video(video_id: int) -> UploadedVideo:
-    video = await UploadedVideo.get_or_none(pk=video_id)
+async def get_video(
+    video_id: int, session: AsyncSession = Depends(get_async_session)
+) -> Video:
+    video = await session.get(Video, video_id)
     if video is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="File not found"

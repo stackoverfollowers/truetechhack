@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseSettings, PostgresDsn, RedisDsn, validator
@@ -61,7 +62,11 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
     JWT_REFRESH_SECRET_KEY: str
 
-    STATIC_PATH: str
+    STATIC_PATH: Path
+
+    @validator("STATIC_PATH")
+    def validate_path(cls, v):
+        return Path(v)
 
     ACCESS_TOKEN_EXPIRE_MINUTES = 30
     REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
