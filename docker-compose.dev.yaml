@@ -73,6 +73,8 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
+    volumes:
+      - ./back/src/:/src
 
   front:
     depends_on:

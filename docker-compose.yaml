@@ -50,6 +50,10 @@ services:
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-secret}
       JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY:-secret2}
 
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
+
   worker_celery:
     image: back
     depends_on:
