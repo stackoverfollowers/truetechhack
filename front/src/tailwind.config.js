@@ -22,6 +22,7 @@ module.exports = {
 				'accents-8': 'rgb(var(--accents-8), <alpha-value>)',
 				'accents-9': 'rgb(var(--accents-9), <alpha-value>)',
 				'accents-10': 'rgb(var(--accents-10), <alpha-value>)',
+				'accents-11': 'rgb(var(--accents-11), <alpha-value>)',
 				error: 'rgb(var(--error-color), <alpha-value>)',
 			},
 		},

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { EpilepticTimingsResponse, MediaType } from '../services/stream';
 
 interface ProgressProps {
 	played: number;
@@ -9,29 +10,26 @@ interface ProgressProps {
 
 interface PlayerState {
 	videoId: number | null;
+	epilepticTimings: EpilepticTimingsResponse['epileptic_timings'] | null;
 	url: string;
-	pip: boolean;
 	playing: boolean;
 	seeking: boolean;
 	controls: boolean;
-	light: boolean;
 	volume: number;
 	muted: boolean;
 	progress: ProgressProps;
 	loaded: number;
 	duration: number;
 	playbackRate: number;
-	loop: boolean;
 }
 
 const initialState: PlayerState = {
 	videoId: null,
+	epilepticTimings: null,
 	url: '',
-	pip: false,
 	playing: false,
 	seeking: false,
 	controls: false,
-	light: false,
 	volume: 0.8,
 	muted: false,
 	progress: {
@@ -43,7 +41,6 @@ const initialState: PlayerState = {
 	loaded: 0,
 	duration: 0,
 	playbackRate: 1.0,
-	loop: false,
 };
 
 const playerSlice = createSlice({
@@ -71,9 +68,22 @@ const playerSlice = createSlice({
 		setProgress: (state, action: PayloadAction<ProgressProps>) => {
 			state.progress = action.payload;
 		},
+		setEpilepticTimings: (
+			state,
+			action: PayloadAction<EpilepticTimingsResponse['epileptic_timings']>
+		) => {
+			state.epilepticTimings = action.payload;
+		},
 		resetPlayer: () => initialState,
 		setUrl: (state, action: PayloadAction<number>) => {
-			state.url = `http://localhost:3001/videos/${action.payload}/stream`;
+			let newUrl = `${process.env.SERVER_URL}/videos/${action.payload}/stream`;
+			if (newUrl === state.url) {
+				return;
+			}
+
+			playerSlice.caseReducers.resetPlayer();
+
+			state.url = newUrl;
 			state.videoId = action.payload;
 		},
 		setVolume: (state, action: PayloadAction<string>) => {
@@ -112,6 +122,7 @@ export const {
 	setDuration,
 	setProgress,
 	setSeeking,
+	setEpilepticTimings,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import {
 	setDuration,
+	setEpilepticTimings,
 	setPlayPause,
 	setProgress,
 	setStop,
@@ -18,26 +17,24 @@ import { useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { useTheme } from 'next-themes';
 import { COLOR_BLIND_FILTERS } from '@/redux/slices/themeSlice';
-import { useGetVideoTimingsQuery } from '@/redux/services/stream';
+import { EpilepticTimingsResponse } from '@/redux/services/stream';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import InfoButton from './player-ui/InfoButton';
+import FeedbackButton from './player-ui/FeedbackButton';
 
 interface VideoPlayerProps {
 	playerRef: any;
 }
 
 const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
-	const dispatch = useDispatch();
-	const { seeking, url, videoId, ...rest } = useSelector(
-		(state: RootState) => state.player
+	const dispatch = useAppDispatch();
+	const { seeking, url, videoId, epilepticTimings, ...rest } = useAppSelector(
+		state => state.player
 	);
-	const { filters } = useSelector((state: RootState) => state.theme);
+	const { filters } = useAppSelector(state => state.theme);
 	const { theme } = useTheme();
 
 	const [showOverlay, setShowOverlay] = useState(false);
-
-	const { data: timings, isLoading: isTimingsLoading } =
-		useGetVideoTimingsQuery(videoId, {
-			skip: !videoId,
-		});
 
 	const filterStyle = {
 		filter: `brightness(${filters.brightness}%) contrast(${
@@ -54,29 +51,32 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	};
 
 	useEffect(() => {
-		if (timings && !isTimingsLoading) {
-			const isBadFrame = timings.epileptic_timings.some(
-				({ start_time, end_time }) => {
-					return (
-						rest.progress.playedSeconds >= start_time &&
-						rest.progress.playedSeconds <= end_time
-					);
-				}
+		const fetchData = async () => {
+			const response = await fetch(
+				`${process.env.SERVER_URL}/videos/${videoId}/timings`
 			);
+			const data: EpilepticTimingsResponse = await response.json();
+
+			dispatch(setEpilepticTimings(data.epileptic_timings));
+		};
+
+		if (url) {
+			fetchData().catch(console.error);
+		}
+	}, [url]);
+
+	useEffect(() => {
+		if (epilepticTimings) {
+			const isBadFrame = epilepticTimings.some(({ start_time, end_time }) => {
+				return (
+					rest.progress.playedSeconds >= start_time &&
+					rest.progress.playedSeconds <= end_time
+				);
+			});
 
 			setShowOverlay(isBadFrame);
 		}
 	}, [rest.progress.playedSeconds]);
-
-	// const badFrames = [5, 6, 7, 8, 9, 10, 20, 30]; // show the overlay at these seconds
-
-	// useEffect(() => {
-	// 	const isBadFrame = badFrames.some(frame => {
-	// 		return Math.abs(rest.progress.playedSeconds - frame) <= 1;
-	// 	});
-
-	// 	setShowOverlay(isBadFrame);
-	// }, [rest.progress.playedSeconds]);
 
 	return (
 		<div className="relative group h-full w-full group">
@@ -87,17 +87,14 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				onDuration={v => dispatch(setDuration(v))}
 				{...rest}
 				style={{ ...filterStyle, minHeight: '600px' }}
-				onReady={() => console.log('onReady')}
-				onStart={() => console.log('onStart')}
-				onError={e => console.log('onError', e)}
 				onProgress={state => {
-					if (!seeking) {
-						dispatch(setProgress(state));
-					}
+					if (!seeking) dispatch(setProgress(state));
 				}}
 				onEnded={() => dispatch(setStop())}
 				url={url}
 			/>
+
+			{/* Overlay */}
 			<Transition
 				show={showOverlay}
 				enter="transition-opacity duration-500"
@@ -109,6 +106,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 			>
 				<div className="absolute inset-0 bg-black h-full w-full pointer-events-none" />
 			</Transition>
+
 			<div
 				onClick={() => dispatch(setPlayPause())}
 				className="h-[86%] w-full z-10 absolute inset-0"
@@ -129,7 +127,12 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 
 					{/* Right controls */}
 					<div className="flex items-center">
+						{/* Epileptic timings info */}
+						<InfoButton />
+						<FeedbackButton />
 						<Filters />
+
+						{/* Fullscreen */}
 						<button
 							className="flex items-center justify-center h-12 w-12"
 							onClick={handleClickFullscreen}

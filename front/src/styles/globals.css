@@ -16,6 +16,7 @@
 		--accents-8: 63, 63, 70;
 		--accents-9: 39, 39, 42;
 		--accents-10: 24, 24, 27;
+		--accents-11: 9, 9, 11;
 
 		--error-color: 255, 0, 0;
 	}
@@ -33,6 +34,7 @@
 		--accents-8: 65, 65, 72;
 		--accents-9: 44, 43, 46;
 		--accents-10: 30, 30, 33;
+		--accents-11: 17, 17, 19;
 
 		--error-color: 143, 126, 30;
 	}
@@ -50,6 +52,7 @@
 		--accents-8: 69, 64, 72;
 		--accents-9: 47, 42, 46;
 		--accents-10: 32, 30, 33;
+		--accents-11: 19, 17, 19;
 
 		--error-color: 161, 120, 0;
 	}
@@ -67,6 +70,7 @@
 		--accents-8: 65, 65, 70;
 		--accents-9: 43, 43, 47;
 		--accents-10: 30, 30, 33;
+		--accents-11: 17, 17, 19;
 
 		--error-color: 253, 23, 0;
 	}
@@ -106,4 +110,12 @@
 		background: white;
 		border-radius: 50%;
 	}
+}
+
+/* input[type='time']::-webkit-datetime-edit-ampm-field {
+	display: none;
+} */
+
+input[type='time']::-webkit-calendar-picker-indicator {
+	display: none;
 }

@@ -4,7 +4,8 @@ import { User } from './user';
 
 export interface AuthResponse {
 	user: User;
-	token: string;
+	refresh_token: string;
+	access_token: string;
 }
 
 interface AuthPayload {
@@ -14,8 +15,8 @@ interface AuthPayload {
 
 export const authApi = createApi({
 	baseQuery,
-	endpoints: builder => ({
-		signin: builder.mutation<AuthResponse, AuthPayload>({
+	endpoints: build => ({
+		signin: build.mutation<AuthResponse, AuthPayload>({
 			query: ({ username, password }) => {
 				const data = new URLSearchParams();
 				data.append('username', username);
@@ -31,7 +32,7 @@ export const authApi = createApi({
 				};
 			},
 		}),
-		signup: builder.mutation<AuthResponse, AuthPayload>({
+		signup: build.mutation<AuthResponse, AuthPayload>({
 			query: data => {
 				return {
 					url: '/auth/signup',

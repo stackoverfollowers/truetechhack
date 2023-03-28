@@ -1,7 +1,5 @@
 import { useUser } from '@/hooks/use-user';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 import UserMenu from '../UserMenu';
 import Button from './Button';
 

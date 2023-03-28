@@ -1,12 +1,11 @@
 import { setProgress, setSeeking } from '@/redux/slices/playerSlice';
-import { RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef } from 'react';
 import generateRangeStyle from '@/lib/generate-range-style';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 const Seek = forwardRef((props, ref) => {
-	const dispatch = useDispatch();
-	const progress = useSelector((state: RootState) => state.player.progress);
+	const dispatch = useAppDispatch();
+	const progress = useAppSelector(state => state.player.progress);
 
 	const seekStyle = generateRangeStyle(progress.played);
 

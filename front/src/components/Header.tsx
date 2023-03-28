@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Input from './ui/Input';
 import ThemeSwitch from './ui/ThemeSwitch';
 import LoginButton from './ui/LoginButton';
+import Image from 'next/image';
 
 const Header = () => {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,12 +32,9 @@ const Header = () => {
 				className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
 				aria-label="Global"
 			>
-				<div className="flex shrink-0 mr-4">
-					<img
-						className="h-8 w-auto"
-						src="https://tailwindui.com/img/logos/mark.svg?color=white"
-					/>
-				</div>
+				<Link href="/" className="flex shrink-0 mr-4">
+					<Image width={32} height={32} alt="Logo" src="logo.svg" />
+				</Link>
 				<div className="flex sm:hidden">
 					<button type="button" onClick={() => setMobileMenuOpen(true)}>
 						<span className="sr-only">Open main menu</span>
@@ -70,11 +68,7 @@ const Header = () => {
 				<div className="fixed inset-0 z-10" />
 				<Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full bg-accents-10 overflow-y-auto  p-4 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
 					<div className="flex items-center justify-between">
-						<img
-							className="h-8 w-auto shrink-0"
-							src="https://tailwindui.com/img/logos/mark.svg?color=white"
-							alt=""
-						/>
+						<Image width={32} height={32} alt="Logo" src="logo.svg" />
 						<button type="button" onClick={() => setMobileMenuOpen(false)}>
 							<span className="sr-only">Close menu</span>
 							<FiX className="h-6 w-6 text-accents-2" aria-hidden="true" />

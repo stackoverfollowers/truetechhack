@@ -1,12 +1,11 @@
 import generateRangeStyle from '@/lib/generate-range-style';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setMute, setVolume } from '@/redux/slices/playerSlice';
-import { RootState } from '@/redux/store';
 import { FiVolume1, FiVolumeX } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
 
 const VolumeControl = () => {
-	const dispatch = useDispatch();
-	const { volume, muted } = useSelector((state: RootState) => state.player);
+	const dispatch = useAppDispatch();
+	const { volume, muted } = useAppSelector(state => state.player);
 
 	const volumeStyle = generateRangeStyle(volume);
 

@@ -9,9 +9,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	href?: string;
 	className?: string;
 	type?: 'submit' | 'reset' | 'button';
-	variant?: 'default' | 'primary';
+	variant?: 'default' | 'secondary';
 	Component?: string | JSXElementConstructor<any>;
 	width?: string | number;
+	loading?: boolean;
+	disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
@@ -22,20 +24,49 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 		variant = 'default',
 		style = {},
 		Component = 'button',
+		loading = false,
+		disabled = false,
 		...rest
 	} = props;
 
+	const rootClassName = cx(
+		'rounded-md py-[5px] px-3 flex justify-center items-center text-sm font-semibold text-center outline-none min-h-[32px]',
+		{
+			'bg-accents-7 hover:bg-accents-6': variant === 'default',
+			'border border-accents-8 bg-accents-10 hover:bg-accents-9':
+				variant === 'secondary',
+			'pointer-events-none ': loading,
+			'opacity-70 pointer-events-none': disabled,
+		},
+		className
+	);
+
 	return (
-		<Component
-			className={cx(
-				className,
-				'rounded-md py-[5px] px-3 text-sm font-semibold text-center outline-none bg-accents-1 text-black hover:bg-accents-3',
-				'disabled:opacity-50 disabled:pointer-events-none'
+		<Component className={rootClassName} style={{ width, ...style }} {...rest}>
+			{loading ? (
+				<svg
+					className="animate-spin h-5 w-5 text-accents-1"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<circle
+						className="opacity-25"
+						cx="12"
+						cy="12"
+						r="10"
+						stroke="currentColor"
+						stroke-width="4"
+					></circle>
+					<path
+						className="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+					></path>
+				</svg>
+			) : (
+				children
 			)}
-			style={{ width, ...style }}
-			{...rest}
-		>
-			{children}
 		</Component>
 	);
 });

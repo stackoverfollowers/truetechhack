@@ -3,16 +3,21 @@ import {
 	setContrast,
 	setSaturation,
 } from '@/redux/slices/themeSlice';
-import { RootState } from '@/redux/store';
 import { Popover, Transition } from '@headlessui/react';
-import { FiChevronRight, FiFilter, FiRotateCcw } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+	FiDroplet,
+	FiFilter,
+	FiRotateCcw,
+	FiSliders,
+	FiSun,
+} from 'react-icons/fi';
 import { Fragment, InputHTMLAttributes } from 'react';
 import generateRangeStyle from '@/lib/generate-range-style';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 
 interface Option extends InputHTMLAttributes<HTMLInputElement> {
 	label: string;
-	icon: React.ComponentType<any>;
+	Icon: React.ComponentType<any>;
 	value: number;
 	min: number;
 	max: number;
@@ -20,9 +25,9 @@ interface Option extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Filters = () => {
-	const dispatch = useDispatch();
-	const { brightness, contrast, saturation } = useSelector(
-		(state: RootState) => state.theme.filters
+	const dispatch = useAppDispatch();
+	const { brightness, contrast, saturation } = useAppSelector(
+		state => state.theme.filters
 	);
 
 	const options: Option[] = [
@@ -33,7 +38,7 @@ const Filters = () => {
 			max: 200,
 			defaultValue: 100,
 			setValue: (v: string) => dispatch(setBrightness(v)),
-			icon: FiChevronRight,
+			Icon: FiSun,
 		},
 		{
 			label: 'Контрастность',
@@ -42,7 +47,7 @@ const Filters = () => {
 			max: 200,
 			defaultValue: 100,
 			setValue: (v: string) => dispatch(setContrast(v)),
-			icon: FiChevronRight,
+			Icon: FiSliders,
 		},
 		{
 			label: 'Насыщенность',
@@ -51,7 +56,7 @@ const Filters = () => {
 			max: 200,
 			defaultValue: 100,
 			setValue: (v: string) => dispatch(setSaturation(v)),
-			icon: FiChevronRight,
+			Icon: FiDroplet,
 		},
 	];
 
@@ -74,10 +79,10 @@ const Filters = () => {
 						leaveFrom="opacity-100 translate-y-0"
 						leaveTo="opacity-0 translate-y-1"
 					>
-						<Popover.Panel className="absolute z-10 mt-3 w-[320px] bottom-10 -right-1/2 transform">
-							<div className="overflow-hidden rounded-lg ring-1 ring-white/10 bg-accents-10 ">
-								<div className="relative flex flex-col gap-4 p-2">
-									{options.map(({ label, defaultValue, setValue, ...rest }) => {
+						<Popover.Panel className="absolute z-10 mt-3 w-[320px] border bottom-10 text-accents-3 right-0 transform rounded-md border-accents-9 bg-accents-10">
+							<div className="relative flex flex-col gap-4 p-2">
+								{options.map(
+									({ label, defaultValue, setValue, Icon, ...rest }) => {
 										const filterStyle = generateRangeStyle(
 											(rest.value - rest.min) / (rest.max - rest.min)
 										);
@@ -87,9 +92,9 @@ const Filters = () => {
 												key={label}
 												className="flex items-center rounded-lg transition duration-150 ease-in-out"
 											>
-												<div className="flex h-6 w-fit shrink-0 items-center justify-center text-accents-2 mr-1">
+												<div className="flex h-6 w-fit shrink-0 items-center justify-center text-accents-2 mr-2">
 													{defaultValue === rest.value ? (
-														<FiChevronRight aria-hidden="true" />
+														<Icon aria-hidden="true" />
 													) : (
 														<FiRotateCcw
 															onClick={() => setValue(defaultValue as string)}
@@ -114,8 +119,8 @@ const Filters = () => {
 												</div>
 											</div>
 										);
-									})}
-								</div>
+									}
+								)}
 							</div>
 						</Popover.Panel>
 					</Transition>

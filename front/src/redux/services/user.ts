@@ -7,9 +7,14 @@ export interface User {
 	username: string;
 }
 
-interface Preferences {
+export interface UserPreferences {
 	user_id: number;
 	theme: Theme;
+}
+
+interface UserTimingsFeedback {
+	startTime: string;
+	endTime: string;
 }
 
 export const userApi = createApi({
@@ -17,13 +22,25 @@ export const userApi = createApi({
 	baseQuery,
 	tagTypes: ['User'],
 	endpoints: build => ({
-		getPreferences: build.query<Preferences, void>({
+		sendTimingFeedback: build.mutation<void, UserTimingsFeedback>({
+			query: data => {
+				return {
+					url: '/users/feedback',
+					method: 'POST',
+					body: data,
+				};
+			},
+		}),
+		getPreferences: build.query<UserPreferences, void>({
 			query: () => `/users/preferences`,
 			providesTags: (result, error, id) => [
 				{ type: 'User', id: 'preferences' },
 			],
 		}),
-		updatePreferences: build.mutation<Preferences, Partial<Preferences>>({
+		updatePreferences: build.mutation<
+			UserPreferences,
+			Partial<UserPreferences>
+		>({
 			query(data) {
 				return {
 					url: `/users/preferences`,
@@ -43,6 +60,7 @@ export const userApi = createApi({
 });
 
 export const {
+	useSendTimingFeedbackMutation,
 	useGetPreferencesQuery,
 	useUpdatePreferencesMutation,
 	useGetUserQuery,

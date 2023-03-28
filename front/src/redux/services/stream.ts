@@ -1,7 +1,7 @@
 import { baseQuery } from '@/lib/base-query';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-interface Video {
+export interface MediaType {
 	id: number;
 	created_at: string;
 	updated_at: string;
@@ -22,7 +22,7 @@ interface PaginationQuery {
 	size: number;
 }
 
-interface VideoTimings {
+export interface EpilepticTimingsResponse {
 	id: number;
 	epileptic_timings: { start_time: number; end_time: number }[];
 }
@@ -32,7 +32,7 @@ export const streamApi = createApi({
 	baseQuery,
 	tagTypes: ['Videos', 'Stream'],
 	endpoints: build => ({
-		getVideos: build.query<ListResponse<Video>, PaginationQuery>({
+		getVideos: build.query<ListResponse<MediaType>, PaginationQuery>({
 			query: ({ page = 1, preprocessed = true, size = 50 }) => ({
 				url: `videos`,
 				params: { preprocessed, page, size },
@@ -48,7 +48,7 @@ export const streamApi = createApi({
 					  ]
 					: [{ type: 'Videos', id: 'VIDEO-LIST' }],
 		}),
-		getVideoTimings: build.query<VideoTimings, number>({
+		getVideoTimings: build.query<EpilepticTimingsResponse, number>({
 			query: id => `videos/${id}/timings`,
 		}),
 		uploadVideo: build.mutation<any, File>({

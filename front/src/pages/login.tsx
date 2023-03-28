@@ -1,23 +1,27 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import { useAppDispatch } from '@/redux/hooks';
 import { useSigninMutation } from '@/redux/services/auth';
+import { UserPreferences } from '@/redux/services/user';
 import { setCredentials } from '@/redux/slices/authSlice';
+import { useTheme } from 'next-themes';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, ReactElement, useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { useDispatch } from 'react-redux';
 
 const SignIn = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
-
 	const [showPassword, setShowPassword] = useState(false);
 
-	const [signin, { isLoading }] = useSigninMutation();
-	const dispatch = useDispatch();
+	const { theme, setTheme } = useTheme();
+
+	const [signin, { isLoading: isSigningIn }] = useSigninMutation();
+	const dispatch = useAppDispatch();
 
 	const router = useRouter();
 
@@ -27,9 +31,16 @@ const SignIn = () => {
 		const authenticate = async () => {
 			const user = await signin({ username, password }).unwrap();
 
-			console.log('user', user);
-
 			dispatch(setCredentials(user as any));
+			const response = await fetch(
+				`${process.env.SERVER_URL}/users/preferences`,
+				{
+					headers: { Authorization: `Bearer ${user.access_token}` },
+				}
+			);
+			const data: UserPreferences = await response.json();
+
+			setTheme(data.theme);
 
 			router.push('/');
 		};
@@ -41,12 +52,9 @@ const SignIn = () => {
 		<>
 			<div className="flex w-full max-w-7xl min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
-					<div>
-						<img
-							className="mx-auto h-12 w-auto"
-							src="https://tailwindui.com/img/logos/mark.svg?color=white"
-							alt=""
-						/>
+					<div className="flex flex-col justify-center items-center">
+						<Image width={48} height={48} alt="Logo" src="logo.svg" />
+
 						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
 							Вход в аккаунт
 						</h2>
@@ -107,7 +115,12 @@ const SignIn = () => {
 							</Link>
 						</div>
 
-						<Button className="w-full" type="submit" disabled={isLoading}>
+						<Button
+							className="w-full"
+							type="submit"
+							disabled={isSigningIn}
+							loading={isSigningIn}
+						>
 							Войти
 						</Button>
 					</form>

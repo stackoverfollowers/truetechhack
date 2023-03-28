@@ -1,6 +1,5 @@
-import { useGetUserQuery } from '@/redux/services/user';
 import { RootState } from '@/redux/store';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 export const useUser = () => {

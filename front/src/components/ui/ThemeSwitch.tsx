@@ -3,7 +3,6 @@ import { Fragment, useState, useEffect, useCallback } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import cx from 'clsx';
 import { Theme } from '@/redux/slices/themeSlice';
-import { useDispatch } from 'react-redux';
 import { useUpdatePreferencesMutation } from '@/redux/services/user';
 import { useUser } from '@/hooks/use-user';
 
@@ -14,7 +13,7 @@ const COLORS_BY_BLINDNESS_TYPE = {
 	trit: ['#cc587b', '#f9105d', '#fc9fb2', '#fdd5dd', '#51dae8', '#17a5b9'],
 };
 
-const THEMES = [
+const THEMES: { label: string; value: Theme }[] = [
 	{
 		label: 'Стандартная',
 		value: 'default',
@@ -64,30 +63,25 @@ const ThemeSwitch = () => {
 
 	let selected = THEMES.find(t => t.value === theme);
 
-	// const handleThemeChange = useCallback(
-	// 	debounce(() => {
-	// 		dispatch(setColorBlindTheme(value));
-	// 	}, 300),
-	// 	[setTheme, dispatch, updatePreferences]
-	// );
+	const handleThemeChange = ({ value }: { value: Theme }) => {
+		setTheme(value);
+
+		if (user) {
+			updatePreferences({
+				user_id: user?.id,
+				theme: value,
+			});
+		}
+	};
 
 	return (
-		<Listbox
-			value={selected}
-			onChange={({ value }) => {
-				setTheme(value);
-				updatePreferences({
-					user_id: user?.id,
-					theme: value as Theme,
-				});
-			}}
-		>
+		<Listbox value={selected} onChange={handleThemeChange}>
 			{({ open }) => (
 				<>
 					<div className="relative z-50">
 						<Listbox.Button
 							as="div"
-							className="relative appearance-none border focus:outline-none border-accents-8 bg-accents-10 text-accents-3 sm:text-sm cursor-default rounded-md py-[5px] px-[5px] "
+							className="relative appearance-none border focus:outline-none border-accents-8 bg-accents-10 cursor-pointer hover:bg-accents-9 text-accents-3 sm:text-sm rounded-md py-[5px] px-[5px] "
 						>
 							<ColorWheel type={selected?.value as any} />
 						</Listbox.Button>
@@ -114,7 +108,7 @@ const ThemeSwitch = () => {
 										}
 										value={theme}
 									>
-										{({ selected, active }) => (
+										{({ selected }) => (
 											<>
 												<ColorWheel type={theme.value as any} />
 												<span

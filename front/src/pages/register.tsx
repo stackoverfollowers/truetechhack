@@ -2,6 +2,7 @@ import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { useSignupMutation } from '@/redux/services/auth';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, ReactElement, useState } from 'react';
@@ -33,12 +34,9 @@ const SignUp = () => {
 		<>
 			<div className="flex w-full max-w-7xl min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
-					<div>
-						<img
-							className="mx-auto h-12 w-auto"
-							src="https://tailwindui.com/img/logos/mark.svg?color=white"
-							alt=""
-						/>
+					<div className="flex flex-col justify-center items-center">
+						<Image width={48} height={48} alt="Logo" src="logo.svg" />
+
 						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
 							Регистрация
 						</h2>

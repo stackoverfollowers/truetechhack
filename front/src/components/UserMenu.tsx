@@ -17,17 +17,16 @@ const UserMenu = () => {
 	};
 
 	const userNavigation = [
-		{ name: 'Профиль', href: '/profile' },
-		{ name: 'Настройки', href: '#' },
+		{ name: 'Профиль', href: '/profile', disabled: false },
+		{ name: 'Настройки', href: '#', disabled: true },
 	];
 
 	return (
-		<Menu as="div" className="relative ml-3">
+		<Menu as="div" className="relative">
 			<div>
 				<Menu.Button className="flex max-w-xs items-center rounded-full bg-accents-9 p-[6px] text-sm border focus:outline-none focus:ring-4 border-accents-8 focus:border-primary focus:ring-primary/10 ">
 					<span className="sr-only">Open user menu</span>
 					<FiUser className="h-5 w-5" />
-					{/* <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" /> */}
 				</Menu.Button>
 			</div>
 			<Transition
@@ -46,7 +45,9 @@ const UserMenu = () => {
 								href={item.href}
 								className={cx(
 									'relative flex items-center px-3 py-[5px] cursor-default select-none rounded-md',
-									'hover:bg-accents-9 hover:text-accents-2'
+									item.disabled
+										? 'pointer-events-none text-accents-6'
+										: 'hover:bg-accents-9 hover:text-accents-2'
 								)}
 							>
 								{item.name}
