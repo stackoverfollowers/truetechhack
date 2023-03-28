@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
     bind=True,
     name="preprocess_video",
     track_started=True,
-    # autoretry_for=(Exception,),
-    # retry_kwargs={"max_retries": 7, "countdown": 5},
+    autoretry_for=(Exception,),
+    retry_kwargs={"max_retries": 7, "countdown": 5},
 )
 def preprocess_video_task(self, video_id: int) -> None:
     with get_session() as session:
@@ -26,3 +26,14 @@ def preprocess_video_task(self, video_id: int) -> None:
             )
         video.preprocessed = True
         session.commit()
+
+
+@celery_app.task(
+    bind=True,
+    name="create_ml_model",
+    track_started=True,
+    autoretry_for=(Exception,),
+    retry_kwargs={"max_retries": 7, "countdown": 5},
+)
+def create_ml_model_task(self):
+    pass

@@ -1,5 +1,6 @@
 import os
 import shutil
+from typing import Annotated
 import uuid
 from pathlib import Path
 
@@ -60,7 +61,8 @@ async def get_videos_paginator(
     dependencies=(Depends(ensure_admin),),
 )
 async def upload_video(
-    file: UploadFile = File(...),
+    file: Annotated[UploadFile, File()],
+    is_
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
@@ -78,7 +80,7 @@ async def upload_video(
     session.add(video)
     await session.commit()
     await session.refresh(video)
-    preprocess_video_task.delay(video_id=video.id)
+    preprocess_video_task.apply_async((video.id,), queue='preprocess_video')
     return UploadedVideoSchema.from_orm(video)
 
 
