@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from fastapi import Depends, HTTPException
@@ -11,8 +12,9 @@ from starlette import status
 
 from constants import get_settings
 from db.engine import get_async_session
-from db.models import User, UserPreferences, Video, VideoPreferences
+from db.models import User, UserPreferences, Video, VideoPreferences, EpilepticTiming
 from schemas import TokenPayload
+from utils import VideoType
 
 settings = get_settings()
 
@@ -80,9 +82,8 @@ async def get_video(
 async def get_video_with_timings(
     video_id: int, session: AsyncSession = Depends(get_async_session)
 ) -> Video:
-    video = await session.get(
-        Video, video_id, options=(selectinload(Video.epileptic_timings),)
-    )
+    q = select(Video).filter_by(id=video_id, user_id=None).options(selectinload(Video.epileptic_timings))
+    video = (await session.execute(q)).scalars().first()
     if video is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
@@ -106,7 +107,37 @@ async def get_video_prefs(
     return prefs
 
 
+async def get_video_timing_for_feedback(
+        start: int,
+        end: int,
+        video: Video = Depends(get_video),
+        user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    if start > end:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Start time can\'t be less than end time"
+        )
+    q = select(EpilepticTiming).filter_by(video=video, start_time=start, end_time=end)
+    timing = (await session.execute(q)).scalars().first()
+    if timing:
+        return
+    timing = EpilepticTiming(video=video, start_time=start, end_time=end, author=user)
+    session.add(timing)
+    video = Video(
+        author=user,
+        filename=video.filename,
+        preprocessed=False,
+        path=video.path,
+        type=VideoType.test
+    )
+    session.add(video)
+    # TODO: поменять это на нужную таску
+    # preprocess_video_task.delay(video_id=video.id)
+    return
+
+
 async def ensure_admin(user: User = Depends(get_current_user)):
-    # Бичевская реализация "админки :)"
     if user.username not in settings.ADMINS_USERNAMES:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed")

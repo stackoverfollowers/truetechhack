@@ -68,7 +68,7 @@ class Settings(BaseSettings):
     def validate_path(cls, v):
         return Path(v)
 
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES = 24 * 60
     REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
     JWT_ALGORITHM = "HS256"
     CHUNK_SIZE = 1024 * 1024
