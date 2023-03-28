@@ -8,6 +8,7 @@ interface ProgressProps {
 }
 
 interface PlayerState {
+	videoId: number | null;
 	url: string;
 	pip: boolean;
 	playing: boolean;
@@ -24,7 +25,8 @@ interface PlayerState {
 }
 
 const initialState: PlayerState = {
-	url: 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
+	videoId: null,
+	url: '',
 	pip: false,
 	playing: false,
 	seeking: false,
@@ -70,8 +72,9 @@ const playerSlice = createSlice({
 			state.progress = action.payload;
 		},
 		resetPlayer: () => initialState,
-		setUrl: (state, action: PayloadAction<string>) => {
-			state.url = action.payload;
+		setUrl: (state, action: PayloadAction<number>) => {
+			state.url = `http://localhost:3001/videos/${action.payload}/stream`;
+			state.videoId = action.payload;
 		},
 		setVolume: (state, action: PayloadAction<string>) => {
 			let volume = parseFloat(action.payload);

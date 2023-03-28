@@ -18,7 +18,7 @@ export const userApi = createApi({
 	tagTypes: ['User'],
 	endpoints: build => ({
 		getPreferences: build.query<Preferences, void>({
-			query: () => `/preferences`,
+			query: () => `/users/preferences`,
 			providesTags: (result, error, id) => [
 				{ type: 'User', id: 'preferences' },
 			],
@@ -26,7 +26,7 @@ export const userApi = createApi({
 		updatePreferences: build.mutation<Preferences, Partial<Preferences>>({
 			query(data) {
 				return {
-					url: `/preferences`,
+					url: `/users/preferences`,
 					method: 'PUT',
 					body: data,
 				};
@@ -36,7 +36,7 @@ export const userApi = createApi({
 			],
 		}),
 		getUser: build.query<User, void>({
-			query: () => `/me`,
+			query: () => `/users/me`,
 			providesTags: (result, error, id) => [{ type: 'User', id: 'me' }],
 		}),
 	}),

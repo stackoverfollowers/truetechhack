@@ -27,7 +27,6 @@ const Profile = () => {
 
 		if (video) {
 			const payload = uploadVideo(video).unwrap();
-			console.log('fulfilled', payload);
 		}
 
 		// @ts-ignore

@@ -1,6 +1,5 @@
-// Or from '@reduxjs/toolkit/query' if not using the auto-generated hooks
 import { baseQuery } from '@/lib/base-query';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 interface Video {
 	id: number;
@@ -23,21 +22,18 @@ interface PaginationQuery {
 	size: number;
 }
 
+interface VideoTimings {
+	id: number;
+	epileptic_timings: { start_time: number; end_time: number }[];
+}
+
 export const streamApi = createApi({
 	reducerPath: 'streamApi',
 	baseQuery,
 	tagTypes: ['Videos', 'Stream'],
 	endpoints: build => ({
-		getVideo: build.query<any, void>({
-			query: () => `api/video`,
-			// providesTags: (result, error, id) => [{ type: 'Video', id }],
-		}),
-		getStream: build.query<any, void>({
-			query: () => `api/stream`,
-			// providesTags: (result, error, id) => [{ type: 'Stream', id: 't' }],
-		}),
 		getVideos: build.query<ListResponse<Video>, PaginationQuery>({
-			query: ({ page = 1, preprocessed = false, size = 50 }) => ({
+			query: ({ page = 1, preprocessed = true, size = 50 }) => ({
 				url: `videos`,
 				params: { preprocessed, page, size },
 			}),
@@ -52,13 +48,16 @@ export const streamApi = createApi({
 					  ]
 					: [{ type: 'Videos', id: 'VIDEO-LIST' }],
 		}),
+		getVideoTimings: build.query<VideoTimings, number>({
+			query: id => `videos/${id}/timings`,
+		}),
 		uploadVideo: build.mutation<any, File>({
 			query: data => {
 				const formData = new FormData();
 				formData.append('file', data);
 
 				return {
-					url: `/video`,
+					url: `videos`,
 					method: 'POST',
 					body: formData,
 				};
@@ -71,8 +70,7 @@ export const streamApi = createApi({
 });
 
 export const {
-	useGetVideoQuery,
-	useGetStreamQuery,
 	useGetVideosQuery,
 	useUploadVideoMutation,
+	useGetVideoTimingsQuery,
 } = streamApi;

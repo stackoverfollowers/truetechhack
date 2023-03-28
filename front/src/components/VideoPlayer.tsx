@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { useTheme } from 'next-themes';
 import { COLOR_BLIND_FILTERS } from '@/redux/slices/themeSlice';
+import { useGetVideoTimingsQuery } from '@/redux/services/stream';
 
 interface VideoPlayerProps {
 	playerRef: any;
@@ -25,13 +26,18 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	const dispatch = useDispatch();
-	const { seeking, url, ...rest } = useSelector(
+	const { seeking, url, videoId, ...rest } = useSelector(
 		(state: RootState) => state.player
 	);
 	const { filters } = useSelector((state: RootState) => state.theme);
 	const { theme } = useTheme();
 
 	const [showOverlay, setShowOverlay] = useState(false);
+
+	const { data: timings, isLoading: isTimingsLoading } =
+		useGetVideoTimingsQuery(videoId, {
+			skip: !videoId,
+		});
 
 	const filterStyle = {
 		filter: `brightness(${filters.brightness}%) contrast(${
@@ -47,17 +53,30 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 		}
 	};
 
-	const badFrames = [5, 6, 7, 8, 9, 10, 20, 30]; // show the overlay at these seconds
-
 	useEffect(() => {
-		const isBadFrame = badFrames.some(frame => {
-			return Math.abs(rest.progress.playedSeconds - frame) <= 1;
-		});
+		if (timings && !isTimingsLoading) {
+			const isBadFrame = timings.epileptic_timings.some(
+				({ start_time, end_time }) => {
+					return (
+						rest.progress.playedSeconds >= start_time &&
+						rest.progress.playedSeconds <= end_time
+					);
+				}
+			);
 
-		setShowOverlay(isBadFrame);
+			setShowOverlay(isBadFrame);
+		}
 	}, [rest.progress.playedSeconds]);
 
-	console.log('url', url);
+	// const badFrames = [5, 6, 7, 8, 9, 10, 20, 30]; // show the overlay at these seconds
+
+	// useEffect(() => {
+	// 	const isBadFrame = badFrames.some(frame => {
+	// 		return Math.abs(rest.progress.playedSeconds - frame) <= 1;
+	// 	});
+
+	// 	setShowOverlay(isBadFrame);
+	// }, [rest.progress.playedSeconds]);
 
 	return (
 		<div className="relative group h-full w-full group">
@@ -67,7 +86,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				height="100%"
 				onDuration={v => dispatch(setDuration(v))}
 				{...rest}
-				style={filterStyle}
+				style={{ ...filterStyle, minHeight: '600px' }}
 				onReady={() => console.log('onReady')}
 				onStart={() => console.log('onStart')}
 				onError={e => console.log('onError', e)}

@@ -7,7 +7,7 @@ import Button from './ui/Button';
 
 const VideoList = () => {
 	const [page, setPage] = useState(1);
-	const [preprocessed, setPreprocessed] = useState(false);
+	const [preprocessed, setPreprocessed] = useState(true);
 	const [size, setSize] = useState(50);
 
 	const dispatch = useAppDispatch();
@@ -17,8 +17,6 @@ const VideoList = () => {
 		size,
 		preprocessed,
 	});
-
-	console.log(data);
 
 	if (isLoading) {
 		return <div className="text-sm">Загрузка...</div>;
@@ -37,7 +35,7 @@ const VideoList = () => {
 						key={video.id}
 						onClick={() => {
 							dispatch(resetPlayer());
-							dispatch(setUrl(`http://localhost:3001/stream/${video.id}`));
+							dispatch(setUrl(video.id));
 						}}
 						className="flex group cursor-pointer hover:bg-accents-8 bg-accents-9 border border-accents-8 rounded-md items-center justify-between py-3 pl-3 pr-4 text-sm"
 					>

@@ -22,7 +22,7 @@ export const authApi = createApi({
 				data.append('password', password);
 
 				return {
-					url: '/login',
+					url: '/auth/login',
 					method: 'POST',
 					body: data,
 					headers: {
@@ -34,7 +34,7 @@ export const authApi = createApi({
 		signup: builder.mutation<AuthResponse, AuthPayload>({
 			query: data => {
 				return {
-					url: '/signup',
+					url: '/auth/signup',
 					method: 'POST',
 					body: data,
 					headers: {
