@@ -82,7 +82,7 @@ async def get_video(
 async def get_video_with_timings(
     video_id: int, session: AsyncSession = Depends(get_async_session)
 ) -> Video:
-    q = select(Video).filter_by(id=video_id, user_id=None).options(selectinload(Video.epileptic_timings))
+    q = select(Video).filter_by(id=video_id).options(selectinload(Video.epileptic_timings))
     video = (await session.execute(q)).scalars().first()
     if video is None:
         raise HTTPException(

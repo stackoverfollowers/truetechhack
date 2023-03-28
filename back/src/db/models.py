@@ -15,6 +15,7 @@ class User(Base, TimestampMixin):
     uploaded_videos = relationship("Video")
     video_preferences = relationship("VideoPreferences")
     user_preference = relationship("UserPreferences")
+    epileptic_timings = relationship("EpilepticTiming")
 
     def __str__(self):
         return f"User ({self.username})"
