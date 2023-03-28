@@ -21,8 +21,19 @@ from starlette import status
 from constants import get_settings
 from db.engine import get_async_session
 from db.models import User, Video, VideoPreferences
-from dependencies import ensure_admin, get_current_user, get_video, get_video_with_timings, get_video_prefs
-from schemas import UploadedVideoSchema, VideoTimingsSchema, VideoPreferencesSchema, VideoPreferencesInSchema
+from dependencies import (
+    ensure_admin,
+    get_current_user,
+    get_video,
+    get_video_prefs,
+    get_video_with_timings,
+)
+from schemas import (
+    UploadedVideoSchema,
+    VideoPreferencesInSchema,
+    VideoPreferencesSchema,
+    VideoTimingsSchema,
+)
 from tasks import preprocess_video_task
 
 settings = get_settings()
@@ -30,9 +41,17 @@ settings = get_settings()
 router = APIRouter(tags=["videos"], prefix="/videos")
 
 
-@router.get("/{video_id}", response_model=UploadedVideoSchema)
-async def get_video_info(video: Video = Depends(get_video)):
-    return UploadedVideoSchema.from_orm(video)
+@router.get("/{video_id}/timings")
+async def get_video_timings(video: Video = Depends(get_video_with_timings)):
+    return VideoTimingsSchema.from_orm(video)
+
+
+@router.get("/", response_model=Page[UploadedVideoSchema])
+async def get_videos_paginator(
+    preprocessed: bool = True,
+    session: AsyncSession = Depends(get_async_session),
+):
+    return await paginate(session, select(Video).filter_by(preprocessed=preprocessed))
 
 
 @router.post(
@@ -63,6 +82,26 @@ async def upload_video(
     return UploadedVideoSchema.from_orm(video)
 
 
+@router.get("/{video_id}", response_model=UploadedVideoSchema)
+async def get_video_info(video: Video = Depends(get_video)):
+    return UploadedVideoSchema.from_orm(video)
+
+
+@router.delete(
+    "/{video_id}",
+    dependencies=(Depends(ensure_admin),),
+)
+async def delete_video(
+    video: Video = Depends(get_video),
+    session: AsyncSession = Depends(get_async_session),
+):
+    path = video.path
+    await session.delete(video)
+    if os.path.exists(path):
+        os.remove(path)
+    return {"status": "ok"}
+
+
 @router.get("/{video_id}/stream", status_code=206)
 async def get_stream(
     video: Video = Depends(get_video), video_range=Header(alias="range")
@@ -82,44 +121,19 @@ async def get_stream(
         return Response(data, status_code=206, headers=headers, media_type="video/mp4")
 
 
-@router.delete(
-    "/{video_id}",
-    dependencies=(Depends(ensure_admin),),
-)
-async def delete_video(
-    video: Video = Depends(get_video),
-    session: AsyncSession = Depends(get_async_session),
-):
-    path = video.path
-    await session.delete(video)
-    if os.path.exists(path):
-        os.remove(path)
-    return {"status": "ok"}
-
-
-@router.get("/g{video_id}/timings")
-async def get_video_timings(video: Video = Depends(get_video_with_timings)):
-    return VideoTimingsSchema.from_orm(video)
-
-
-@router.get("/", response_model=Page[UploadedVideoSchema])
-async def get_videos_paginator(
-    preprocessed: bool = True,
-    session: AsyncSession = Depends(get_async_session),
-):
-    return await paginate(session, select(Video).filter_by(preprocessed=preprocessed))
-
-
 @router.get("/{video_id}/preferences")
-async def get_video_preferences(video_preferences: VideoPreferences = Depends(get_video_prefs)):
+async def get_video_preferences(
+    video_preferences: VideoPreferences = Depends(get_video_prefs),
+):
     return VideoPreferencesSchema.from_orm(video_preferences)
 
 
 @router.put("/{video_id}/preferences")
 async def put_video_preferences(
-        form_data: VideoPreferencesInSchema,
-        current_prefs: VideoPreferences = Depends(get_video_prefs),
-        session: AsyncSession = Depends(get_async_session)):
+    form_data: VideoPreferencesInSchema,
+    current_prefs: VideoPreferences = Depends(get_video_prefs),
+    session: AsyncSession = Depends(get_async_session),
+):
     current_prefs.update_from_dict(**form_data.dict())
     session.add(current_prefs)
     await session.commit()

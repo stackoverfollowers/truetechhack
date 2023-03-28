@@ -16,7 +16,7 @@ from schemas import TokenPayload
 
 settings = get_settings()
 
-oauth = OAuth2PasswordBearer(tokenUrl="/login", scheme_name="JWT")
+oauth = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
 
 
 async def get_current_user(
@@ -91,9 +91,9 @@ async def get_video_with_timings(
 
 
 async def get_video_prefs(
-        video_id: int,
-        user: User = Depends(get_current_user),
-        session: AsyncSession = Depends(get_async_session)
+    video_id: int,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_async_session),
 ) -> VideoPreferences:
     q = select(VideoPreferences).filter_by(user=user, video_id=video_id)
     prefs = (await session.execute(q)).scalars().first()
