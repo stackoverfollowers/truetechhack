@@ -53,6 +53,11 @@ class VideoPreferences(Base, TimestampMixin):
     def __str__(self) -> str:
         return f"Preferences (b: {self.brightness} c: {self.contrast} s: {self.saturation})"
 
+    def update_from_dict(self, **kwargs):
+        for field, value in kwargs.items():
+            if hasattr(self, field):
+                setattr(self, field, value)
+
 
 class UserPreferences(Base, TimestampMixin):
     user_id = Column(

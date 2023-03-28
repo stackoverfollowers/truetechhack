@@ -11,7 +11,7 @@ from starlette import status
 
 from constants import get_settings
 from db.engine import get_async_session
-from db.models import User, UserPreferences, Video
+from db.models import User, UserPreferences, Video, VideoPreferences
 from schemas import TokenPayload
 
 settings = get_settings()
@@ -88,6 +88,22 @@ async def get_video_with_timings(
             status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
         )
     return video
+
+
+async def get_video_prefs(
+        video_id: int,
+        user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+) -> VideoPreferences:
+    q = select(VideoPreferences).filter_by(user=user, video_id=video_id)
+    prefs = (await session.execute(q)).scalars().first()
+    if prefs is not None:
+        return prefs
+    prefs = VideoPreferences(user=user, video_id=video_id)
+    session.add(prefs)
+    await session.commit()
+    await session.refresh(prefs)
+    return prefs
 
 
 async def ensure_admin(user: User = Depends(get_current_user)):

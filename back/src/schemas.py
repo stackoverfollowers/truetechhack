@@ -57,13 +57,15 @@ class TokenPayload(BaseModel):
     exp: float
 
 
-class VideoPreferencesSchema(BaseModel):
-    user_id: int
-    video_id: int
-
+class VideoPreferencesInSchema(BaseModel):
     brightness: int
     contrast: int
     saturation: int
+
+
+class VideoPreferencesSchema(VideoPreferencesInSchema):
+    user_id: int
+    video_id: int
 
     class Config:
         orm_mode = True

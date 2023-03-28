@@ -20,14 +20,9 @@ from starlette import status
 
 from constants import get_settings
 from db.engine import get_async_session
-from db.models import User, Video
-from dependencies import (
-    ensure_admin,
-    get_current_user,
-    get_video,
-    get_video_with_timings,
-)
-from schemas import UploadedVideoSchema, VideoTimingsSchema
+from db.models import User, Video, VideoPreferences
+from dependencies import ensure_admin, get_current_user, get_video, get_video_with_timings, get_video_prefs
+from schemas import UploadedVideoSchema, VideoTimingsSchema, VideoPreferencesSchema, VideoPreferencesInSchema
 from tasks import preprocess_video_task
 
 settings = get_settings()
@@ -107,9 +102,25 @@ async def get_video_timings(video: Video = Depends(get_video_with_timings)):
     return VideoTimingsSchema.from_orm(video)
 
 
-@router.get("/videos", response_model=Page[UploadedVideoSchema])
+@router.get("/", response_model=Page[UploadedVideoSchema])
 async def get_videos_paginator(
     preprocessed: bool = True,
     session: AsyncSession = Depends(get_async_session),
 ):
     return await paginate(session, select(Video).filter_by(preprocessed=preprocessed))
+
+
+@router.get("/video/{video_id}/preferences")
+async def get_video_preferences(video_preferences: VideoPreferences = Depends(get_video_prefs)):
+    return VideoPreferencesSchema.from_orm(video_preferences)
+
+
+@router.put("/video/{video_id}/preferences")
+async def put_video_preferences(
+        form_data: VideoPreferencesInSchema,
+        current_prefs: VideoPreferences = Depends(get_video_prefs),
+        session: AsyncSession = Depends(get_async_session)):
+    current_prefs.update_from_dict(**form_data.dict())
+    session.add(current_prefs)
+    await session.commit()
+    return VideoPreferencesSchema.from_orm(current_prefs)
