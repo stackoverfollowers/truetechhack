@@ -21,8 +21,8 @@ from starlette import status
 from constants import get_settings
 from db.engine import get_async_session
 from db.models import User, Video
-from dependencies import ensure_admin, get_current_user, get_video
-from schemas import UploadedVideoSchema
+from dependencies import ensure_admin, get_current_user, get_video, get_video_with_timings
+from schemas import UploadedVideoSchema, VideoTimingsSchema
 from tasks import preprocess_video_task
 
 settings = get_settings()
@@ -95,6 +95,11 @@ async def delete_video(
     if os.path.exists(path):
         os.remove(path)
     return {"status": "ok"}
+
+
+@router.get("/video/{video_id}/timings")
+async def get_video_timings(video: Video = Depends(get_video_with_timings)):
+    return VideoTimingsSchema.from_orm(video)
 
 
 @router.get("/videos", response_model=Page[UploadedVideoSchema])

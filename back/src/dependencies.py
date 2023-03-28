@@ -6,6 +6,7 @@ from jose import jwt
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import selectinload
 from starlette import status
 
 from constants import get_settings
@@ -75,6 +76,14 @@ async def get_video(
         )
     return video
 
+
+async def get_video_with_timings(video_id: int, session: AsyncSession = Depends(get_async_session)) -> Video:
+    video = await session.get(Video, video_id, options=(selectinload(Video.epileptic_timings),))
+    if video is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
+        )
+    return video
 
 async def ensure_admin(user: User = Depends(get_current_user)):
     # Бичевская реализация "админки :)"
