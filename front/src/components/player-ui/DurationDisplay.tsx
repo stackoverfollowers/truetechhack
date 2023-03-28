@@ -1,10 +1,10 @@
-import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
+import useFontSize from '@/hooks/use-font-size';
+import { useAppSelector } from '@/redux/hooks';
 
 const DurationDisplay = () => {
-	const { duration, progress } = useSelector(
-		(state: RootState) => state.player
-	);
+	const fs = useFontSize();
+
+	const { duration, progress } = useAppSelector(state => state.player);
 
 	const pad = (str: any) => ('0' + str).slice(-2);
 
@@ -21,7 +21,7 @@ const DurationDisplay = () => {
 
 	return (
 		<>
-			<span className="flex items-center text-sm font-mono tracking-tighter">
+			<span className={`${fs.sm} flex items-center font-mono tracking-tighter`}>
 				<span>{format(duration * progress.played)}</span>
 				<span className="px-[2px]">/</span>
 				<span>{format(duration)}</span>

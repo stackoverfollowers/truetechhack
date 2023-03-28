@@ -15,7 +15,7 @@ export interface ThemeState {
 		contrast: number;
 		saturation: number;
 	};
-	// fs: 'xs' | 'sm' | 'base' | 'lg';
+	accessibleFs: boolean;
 }
 
 const initialState: ThemeState = {
@@ -24,7 +24,7 @@ const initialState: ThemeState = {
 		contrast: 100,
 		saturation: 100,
 	},
-	// fs: 'sm'
+	accessibleFs: false,
 };
 
 const themeSlice = createSlice({
@@ -40,9 +40,17 @@ const themeSlice = createSlice({
 		setSaturation: (state, action: PayloadAction<string>) => {
 			state.filters.saturation = parseInt(action.payload);
 		},
+		setAccessibleFontSize: state => {
+			state.accessibleFs = !state.accessibleFs;
+		},
 	},
 });
 
-export const { setBrightness, setContrast, setSaturation } = themeSlice.actions;
+export const {
+	setBrightness,
+	setContrast,
+	setSaturation,
+	setAccessibleFontSize,
+} = themeSlice.actions;
 
 export default themeSlice.reducer;

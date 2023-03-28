@@ -6,10 +6,13 @@ import { Fragment } from 'react';
 import cx from 'clsx';
 import { FiUser } from 'react-icons/fi';
 import Link from 'next/link';
+import useFontSize from '@/hooks/use-font-size';
 
 const UserMenu = () => {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
+
+	const fs = useFontSize();
 
 	const handleLogout = () => {
 		dispatch(clearCredentials());
@@ -24,7 +27,7 @@ const UserMenu = () => {
 	return (
 		<Menu as="div" className="relative">
 			<div>
-				<Menu.Button className="flex max-w-xs items-center rounded-full bg-accents-9 p-[6px] text-sm border focus:outline-none focus:ring-4 border-accents-8 focus:border-primary focus:ring-primary/10 ">
+				<Menu.Button className="flex max-w-xs items-center rounded-full bg-accents-9 p-[6px] border focus:outline-none focus:ring-4 border-accents-8 focus:border-primary focus:ring-primary/10 ">
 					<span className="sr-only">Open user menu</span>
 					<FiUser className="h-5 w-5" />
 				</Menu.Button>
@@ -38,7 +41,9 @@ const UserMenu = () => {
 				leaveFrom="transform opacity-100 scale-100"
 				leaveTo="transform opacity-0 scale-95"
 			>
-				<Menu.Items className="absolute right-0 min-w-[164px] p-1 border border-accents-8 bg-accents-10 text-accents-3 z-50 mt-2 max-h-56 w-full overflow-auto rounded-md py-1 focus:outline-none text-sm">
+				<Menu.Items
+					className={`${fs.sm} absolute right-0 min-w-[164px] p-1 border border-accents-8 bg-accents-10 text-accents-3 z-50 mt-2 max-h-56 w-full overflow-auto rounded-md py-1 focus:outline-none`}
+				>
 					{userNavigation.map(item => (
 						<Menu.Item key={item.name}>
 							<Link

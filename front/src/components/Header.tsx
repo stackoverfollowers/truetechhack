@@ -7,8 +7,12 @@ import Input from './ui/Input';
 import ThemeSwitch from './ui/ThemeSwitch';
 import LoginButton from './ui/LoginButton';
 import Image from 'next/image';
+import FontsizeSwitch from './ui/FontsizeSwitch';
+import useFontSize from '@/hooks/use-font-size';
 
 const Header = () => {
+	const fs = useFontSize();
+
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	const navigation = [
@@ -46,13 +50,14 @@ const Header = () => {
 						<Link
 							href={href}
 							key={i}
-							className="text-base font-semibold relative block transition hover:text-primary"
+							className={`${fs.base} font-semibold relative block transition hover:text-primary`}
 						>
 							{label}
 						</Link>
 					))}
 				</div>
 				<div className="hidden sm:flex sm:flex-1 sm:justify-end sm:items-center gap-x-2">
+					<FontsizeSwitch />
 					<ThemeSwitch />
 					<Input placeholder="Поиск" className="w-[200px]" />
 					<LoginButton />
@@ -75,12 +80,12 @@ const Header = () => {
 						</button>
 					</div>
 					<div className="mt-6 ">
-						<div className="space-y-2 text-base">
+						<div className={`${fs.base} space-y-2`}>
 							{navigation.map(({ label, href }, i) => (
 								<a
 									href={href}
 									key={i}
-									className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 relative transition hover:text-primary"
+									className="-mx-3 block rounded-lg py-2 px-3 font-semibold leading-7 relative transition hover:text-primary"
 								>
 									{label}
 								</a>
@@ -89,7 +94,7 @@ const Header = () => {
 					</div>
 					<div className="my-4 border-t border-accents-8" />
 					<div className="flex items-center justify-between w-fit gap-x-8">
-						<span className="text-base font-semibold leading-7">
+						<span className={`${fs.base} font-semibold leading-7`}>
 							Настройка темы
 						</span>
 						<ThemeSwitch />

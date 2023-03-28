@@ -5,6 +5,7 @@ import cx from 'clsx';
 import { Theme } from '@/redux/slices/themeSlice';
 import { useUpdatePreferencesMutation } from '@/redux/services/user';
 import { useUser } from '@/hooks/use-user';
+import useFontSize from '@/hooks/use-font-size';
 
 const COLORS_BY_BLINDNESS_TYPE = {
 	default: ['#951bc6', '#f7151d', '#f7a12d', '#ebe024', '#4ddd47', '#2667c5'],
@@ -47,6 +48,8 @@ const ColorWheel = ({ type }: { type: Theme }) => {
 };
 
 const ThemeSwitch = () => {
+	const fs = useFontSize();
+
 	const [mounted, setMounted] = useState(false);
 	const { theme, setTheme } = useTheme();
 
@@ -78,10 +81,10 @@ const ThemeSwitch = () => {
 		<Listbox value={selected} onChange={handleThemeChange}>
 			{({ open }) => (
 				<>
-					<div className="relative z-50">
+					<div className={`${fs.sm} relative z-50`}>
 						<Listbox.Button
 							as="div"
-							className="relative appearance-none border focus:outline-none border-accents-8 bg-accents-10 cursor-pointer hover:bg-accents-9 text-accents-3 sm:text-sm rounded-md py-[5px] px-[5px] "
+							className="relative appearance-none border focus:outline-none border-accents-8 bg-accents-10 cursor-pointer hover:bg-accents-9 text-accents-3 rounded-md py-[5px] px-[5px]"
 						>
 							<ColorWheel type={selected?.value as any} />
 						</Listbox.Button>
@@ -93,7 +96,7 @@ const ThemeSwitch = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="absolute right-0 min-w-[164px] p-1 border border-accents-8 bg-accents-10 text-accents-3 z-10 mt-2 max-h-56 w-full overflow-auto rounded-md py-1 focus:outline-none text-sm">
+							<Listbox.Options className="absolute right-0 min-w-[164px] p-1 border border-accents-8 bg-accents-10 text-accents-3 z-10 mt-2 max-h-56 w-full overflow-auto rounded-md py-1 focus:outline-none">
 								{THEMES.map(theme => (
 									<Listbox.Option
 										key={theme.value}

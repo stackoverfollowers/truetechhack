@@ -1,11 +1,14 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
+import useFontSize from '@/hooks/use-font-size';
 import { useUploadVideoMutation } from '@/redux/services/stream';
 import { useGetUserQuery } from '@/redux/services/user';
 import cx from 'clsx';
 import { ChangeEvent, FormEvent, ReactElement, useRef, useState } from 'react';
 
 const Profile = () => {
+	const fs = useFontSize();
+
 	const [file, setFile] = useState<File | null>(null);
 
 	const { data: user, isLoading: isUserLoading } = useGetUserQuery();
@@ -35,23 +38,22 @@ const Profile = () => {
 	return (
 		<div className="w-full max-w-7xl flex flex-col gap-y-8">
 			<div className="bg-accents-10 rounded-md p-4">
-				<h2 className="text-lg font-semibold leading-7">Профиль</h2>
-				<p className="mt-1 text-sm leading-6 text-accents-6">Общие настройки</p>
+				<h2 className={`${fs.base} font-semibold leading-7`}>Профиль</h2>
+				<p className={`${fs.sm} mt-1  leading-6 text-accents-6`}>
+					Общие настройки
+				</p>
 
 				<div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-					<div className="sm:col-span-4">
-						<label
-							htmlFor="username"
-							className="block text-sm font-medium leading-6"
-						>
+					<div className={`${fs.sm} sm:col-span-4`}>
+						<label htmlFor="username" className="block font-medium leading-6">
 							Имя пользователя
 						</label>
 						<div className="mt-2">
 							<div className="flex rounded-md overflow-hidden border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 sm:max-w-md">
-								<span className="flex h-8 select-none items-center px-3 text-primary/80 text-sm bg-accents-9 border-r border-accents-8">
+								<span className="flex h-8 select-none items-center px-3 text-primary/80 bg-accents-9 border-r border-accents-8">
 									stackoverfollowers/
 								</span>
-								<span className="flex h-8 items-center text-sm pl-2">
+								<span className="flex h-8 items-center pl-2">
 									{user?.username}
 								</span>
 							</div>
@@ -61,15 +63,14 @@ const Profile = () => {
 			</div>
 			<form className="bg-accents-10 rounded-md p-4" onSubmit={handleUpload}>
 				<div className="border-b border-accents-8 pb-4">
-					<h2 className="text-lg font-semibold leading-7">Видео</h2>
-					<p className="mt-1 text-sm leading-6 text-accents-6">
+					<h2 className={`${fs.base} font-semibold leading-7`}>Видео</h2>
+					<p className={`${fs.sm} mt-1  leading-6 text-accents-6`}>
 						Загруженное видео предварительно пройдент обработку на бэкенде для
 						выявления <b>потенциально эпилептических кадров</b>, после чего
 						появится в списке видео под плеером. Обработка больших файлов
 						занимает больше времени.
 					</p>
-
-					<div className="col-span-full mt-8">
+					<div className={`${fs.sm} col-span-full mt-8`}>
 						<div className="mt-2">
 							<div className="flex w-fit rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
 								<input
@@ -83,19 +84,17 @@ const Profile = () => {
 								/>
 								{!file ? (
 									<button
-										className="text-sm px-3 py-[5px]"
+										className="px-3 py-[5px]"
 										onClick={() => fileInputRef.current.click()}
 									>
 										Загрузить
 									</button>
 								) : (
 									<div className="flex items-center px-3 gap-x-3">
-										<div className="text-sm text-primary/80">
-											{file && file.name}
-										</div>
+										<div className="text-primary/80">{file && file.name}</div>
 
 										<button
-											className="text-sm  py-[5px]"
+											className="py-[5px]"
 											onClick={() => setFile(null)}
 											disabled={isUploading}
 										>
@@ -115,7 +114,9 @@ const Profile = () => {
 					)}
 				>
 					{isUploadError && (
-						<span className="text-error text-sm">Повторите попытку позже.</span>
+						<span className={`${fs.sm} text-error`}>
+							Повторите попытку позже.
+						</span>
 					)}
 					<Button type="submit" disabled={isUploading || !file}>
 						Сохранить

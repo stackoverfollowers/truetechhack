@@ -10,6 +10,7 @@ export interface User {
 export interface UserPreferences {
 	user_id: number;
 	theme: Theme;
+	fs: 'base' | 'lg';
 }
 
 interface UserTimingsFeedback {

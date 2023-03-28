@@ -14,6 +14,7 @@ import {
 import { Fragment, InputHTMLAttributes } from 'react';
 import generateRangeStyle from '@/lib/generate-range-style';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import useFontSize from '@/hooks/use-font-size';
 
 interface Option extends InputHTMLAttributes<HTMLInputElement> {
 	label: string;
@@ -25,6 +26,8 @@ interface Option extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Filters = () => {
+	const fs = useFontSize();
+
 	const dispatch = useAppDispatch();
 	const { brightness, contrast, saturation } = useAppSelector(
 		state => state.theme.filters
@@ -104,7 +107,9 @@ const Filters = () => {
 													)}
 												</div>
 												<div className="flex justify-between w-full mr-1">
-													<label className="text-sm font-medium text-accents-3">
+													<label
+														className={`${fs.sm} font-medium text-accents-3`}
+													>
 														{label}
 													</label>
 													<input

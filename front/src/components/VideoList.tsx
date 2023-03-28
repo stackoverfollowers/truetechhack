@@ -1,3 +1,4 @@
+import useFontSize from '@/hooks/use-font-size';
 import { useAppDispatch } from '@/redux/hooks';
 import { MediaType, useGetVideosQuery } from '@/redux/services/stream';
 import { setUrl } from '@/redux/slices/playerSlice';
@@ -7,6 +8,7 @@ import Button from './ui/Button';
 
 const VideoCard = ({ video }: { video: MediaType }) => {
 	const dispatch = useAppDispatch();
+	const fs = useFontSize();
 
 	const handleVideoSelect = () => {
 		dispatch(setUrl(video.id));
@@ -16,7 +18,7 @@ const VideoCard = ({ video }: { video: MediaType }) => {
 		<div
 			key={video.id}
 			onClick={handleVideoSelect}
-			className="flex group cursor-pointer hover:bg-accents-8 bg-accents-9 border border-accents-8 rounded-md items-center justify-between py-3 pl-3 pr-4 text-sm"
+			className={`${fs.sm} flex group cursor-pointer hover:bg-accents-8 bg-accents-9 border border-accents-8 rounded-md items-center justify-between py-3 pl-3 pr-4`}
 		>
 			<div className="flex w-0 flex-1 items-center">
 				<FiFilm
@@ -33,6 +35,7 @@ const VideoList = () => {
 	const [page, setPage] = useState(1);
 	const [preprocessed, setPreprocessed] = useState(true);
 	const [size, setSize] = useState(50);
+	const fs = useFontSize();
 
 	const { data, isLoading } = useGetVideosQuery({
 		page,
@@ -41,7 +44,7 @@ const VideoList = () => {
 	});
 
 	if (isLoading) {
-		return <div className="text-sm">Загрузка...</div>;
+		return <div className={fs.sm}>Загрузка...</div>;
 	}
 
 	if (!data?.items.length) {
@@ -50,7 +53,7 @@ const VideoList = () => {
 
 	return (
 		<>
-			<div className="text-sm uppercase font-semibold mb-2">
+			<div className={`${fs.sm} uppercase font-semibold mb-2`}>
 				Список доступных видео
 			</div>
 			<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 ">

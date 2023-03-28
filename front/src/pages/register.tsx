@@ -1,6 +1,7 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import useFontSize from '@/hooks/use-font-size';
 import { useSignupMutation } from '@/redux/services/auth';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,6 +10,8 @@ import { FormEvent, ReactElement, useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const SignUp = () => {
+	const fs = useFontSize();
+
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
@@ -85,9 +88,9 @@ const SignUp = () => {
 								</div>
 							</div>
 						</div>
-						{error && <span className="text-error text-sm">{error}</span>}
+						{error && <span className={`${fs.sm} text-error`}>{error}</span>}
 
-						<div className="flex text-sm items-center justify-between">
+						<div className={`${fs.sm} flex items-center justify-between`}>
 							<span>Уже есть аккаунт?</span>
 							<Link
 								href="/login"

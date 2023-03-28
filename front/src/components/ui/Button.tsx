@@ -1,3 +1,4 @@
+import useFontSize from '@/hooks/use-font-size';
 import cx from 'clsx';
 import React, {
 	forwardRef,
@@ -29,8 +30,11 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 		...rest
 	} = props;
 
+	const fs = useFontSize();
+
 	const rootClassName = cx(
-		'rounded-md py-[5px] px-3 flex justify-center items-center text-sm font-semibold text-center outline-none min-h-[32px]',
+		'rounded-md py-[5px] px-3 flex justify-center items-center font-semibold text-center outline-none min-h-[32px]',
+		fs.sm,
 		{
 			'bg-accents-7 hover:bg-accents-6': variant === 'default',
 			'border border-accents-8 bg-accents-10 hover:bg-accents-9':
