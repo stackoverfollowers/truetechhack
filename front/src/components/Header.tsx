@@ -56,7 +56,7 @@ const Header = () => {
 				</div>
 				<div className="hidden sm:flex sm:flex-1 sm:justify-end sm:items-center gap-x-2">
 					<ThemeSwitch />
-					<Input placeholder="Поиск" />
+					<Input placeholder="Поиск" className="w-[200px]" />
 					<LoginButton />
 				</div>
 			</nav>
