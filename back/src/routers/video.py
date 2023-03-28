@@ -32,7 +32,7 @@ from tasks import preprocess_video_task
 
 settings = get_settings()
 
-router = APIRouter(tags=["videos"], prefix="/video")
+router = APIRouter(tags=["videos"], prefix="/videos")
 
 
 @router.get("/{video_id}", response_model=UploadedVideoSchema)
@@ -102,7 +102,7 @@ async def delete_video(
     return {"status": "ok"}
 
 
-@router.get("/{video_id}/timings")
+@router.get("/g{video_id}/timings")
 async def get_video_timings(video: Video = Depends(get_video_with_timings)):
     return VideoTimingsSchema.from_orm(video)
 
