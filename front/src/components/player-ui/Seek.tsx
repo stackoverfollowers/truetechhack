@@ -1,5 +1,5 @@
-import { setProgress, setSeeking } from '@/services/playerSlice';
-import { RootState } from '@/store';
+import { setProgress, setSeeking } from '@/redux/services/playerSlice';
+import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef } from 'react';
 import generateRangeStyle from '@/lib/generate-range-style';

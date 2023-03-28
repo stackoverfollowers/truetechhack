@@ -1,5 +1,5 @@
 import { useUser } from '@/hooks/use-user';
-import { clearCredentials } from '@/services/authSlice';
+import { clearCredentials } from '@/redux/slices/authSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -19,6 +19,8 @@ const LoginButton = ({ className }: LoginButtonProps) => {
 		router.replace('/');
 	};
 
+	console.log(user);
+
 	if (user) {
 		return (
 			<>
@@ -30,7 +32,7 @@ const LoginButton = ({ className }: LoginButtonProps) => {
 	}
 	return (
 		<>
-			<Button Component={Link} className={className} href="/auth/signin">
+			<Button Component={Link} className={className} href="/login">
 				Войти
 			</Button>
 		</>

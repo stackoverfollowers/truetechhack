@@ -5,7 +5,7 @@ import cx from 'clsx';
 import {
 	setTheme as setColorBlindTheme,
 	ThemeState,
-} from '@/services/themeSlice';
+} from '@/redux/services/themeSlice';
 import { useDispatch } from 'react-redux';
 
 interface Props {

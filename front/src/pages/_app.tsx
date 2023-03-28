@@ -1,4 +1,4 @@
-import { store } from '@/store';
+import { store } from '@/redux/store';
 import '@/styles/globals.css';
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';

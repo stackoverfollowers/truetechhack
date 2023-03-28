@@ -3,8 +3,8 @@ import {
 	setContrast,
 	setSaturation,
 	setSharpness,
-} from '@/services/themeSlice';
-import { RootState } from '@/store';
+} from '@/redux/services/themeSlice';
+import { RootState } from '@/redux/store';
 import { Popover, Transition } from '@headlessui/react';
 import {
 	FiChevronRight,
