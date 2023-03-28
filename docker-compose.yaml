@@ -53,11 +53,15 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
+    
+    volumes:
+      - static_data:${STATIC_PATH:-/static}
 
   worker_celery:
     image: back
     depends_on:
       - back
+      - redis
     command: celery -A celery_conf worker -l INFO -f /logs/celery_worker.log --concurrency 4
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-user}
@@ -74,6 +78,8 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
+    volumes:
+      - static_data:${STATIC_PATH:-/static}
 
 
   front:
@@ -102,4 +108,7 @@ volumes:
     driver: local
 
   redis_data:
+    driver: local
+
+  static_data:
     driver: local

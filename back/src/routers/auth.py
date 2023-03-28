@@ -14,7 +14,7 @@ from utils import (
     verify_password,
 )
 
-router = APIRouter()
+router = APIRouter(tags=["auth"], prefix="/auth")
 
 
 @router.post("/signup", response_model=UserSchema)

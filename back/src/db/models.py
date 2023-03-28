@@ -77,5 +77,7 @@ class EpilepticTiming(Base):
     start_time = Column(Integer, nullable=False)
     end_time = Column(Integer, nullable=False)
 
+    video = relationship("Video", back_populates="epileptic_timings")
+
     def __str__(self) -> str:
         return f"({self.start_time}, {self.end_time})"

@@ -21,22 +21,27 @@ from starlette import status
 from constants import get_settings
 from db.engine import get_async_session
 from db.models import User, Video
-from dependencies import ensure_admin, get_current_user, get_video
-from schemas import UploadedVideoSchema
-from tasks import preprocess_video
+from dependencies import (
+    ensure_admin,
+    get_current_user,
+    get_video,
+    get_video_with_timings,
+)
+from schemas import UploadedVideoSchema, VideoTimingsSchema
+from tasks import preprocess_video_task
 
 settings = get_settings()
 
-router = APIRouter()
+router = APIRouter(tags=["videos"], prefix="/videos")
 
 
-@router.get("/video/{video_id}", response_model=UploadedVideoSchema)
+@router.get("/{video_id}", response_model=UploadedVideoSchema)
 async def get_video_info(video: Video = Depends(get_video)):
     return UploadedVideoSchema.from_orm(video)
 
 
 @router.post(
-    "/video",
+    "/",
     response_model=UploadedVideoSchema,
     dependencies=(Depends(ensure_admin),),
 )
@@ -59,11 +64,11 @@ async def upload_video(
     session.add(video)
     await session.commit()
     await session.refresh(video)
-    preprocess_video.delay(video_id=video.id)
+    preprocess_video_task.delay(video_id=video.id)
     return UploadedVideoSchema.from_orm(video)
 
 
-@router.get("/stream/{video_id}", status_code=206)
+@router.get("/{video_id}/stream", status_code=206)
 async def get_stream(
     video: Video = Depends(get_video), video_range=Header(alias="range")
 ):
@@ -83,7 +88,7 @@ async def get_stream(
 
 
 @router.delete(
-    "/video/{video_id}",
+    "/{video_id}",
     dependencies=(Depends(ensure_admin),),
 )
 async def delete_video(
@@ -95,6 +100,11 @@ async def delete_video(
     if os.path.exists(path):
         os.remove(path)
     return {"status": "ok"}
+
+
+@router.get("/g{video_id}/timings")
+async def get_video_timings(video: Video = Depends(get_video_with_timings)):
+    return VideoTimingsSchema.from_orm(video)
 
 
 @router.get("/videos", response_model=Page[UploadedVideoSchema])

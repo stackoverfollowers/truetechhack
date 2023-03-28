@@ -1,18 +1,18 @@
 """Init migration
 
-Revision ID: 325b4d2b70f7
+Revision ID: 3d363d89bdec
 Revises: 
-Create Date: 2023-03-27 20:21:38.633980
+Create Date: 2023-03-28 08:57:03.026293
 
 """
 import sqlalchemy as sa
 import sqlalchemy_utils
 from alembic import op
 
-from db.models import SiteTheme
+from utils import SiteTheme
 
 # revision identifiers, used by Alembic.
-revision = "325b4d2b70f7"
+revision = "3d363d89bdec"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -143,7 +143,13 @@ def upgrade() -> None:
     )
     op.create_table(
         "celery_taskmeta",
-        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column(
+            "id",
+            sa.Integer(),
+            sa.Sequence("task_id_sequence"),
+            autoincrement=True,
+            nullable=False,
+        ),
         sa.Column("task_id", sa.String(length=155), nullable=True),
         sa.Column("status", sa.String(length=50), nullable=True),
         sa.Column("result", sa.PickleType(), nullable=True),
@@ -159,15 +165,27 @@ def upgrade() -> None:
         sa.UniqueConstraint("task_id"),
         sqlite_autoincrement=True,
     )
+    op.execute(
+        sa.schema.CreateSequence(sa.Sequence("task_id_sequence"), if_not_exists=True)
+    )
     op.create_table(
         "celery_tasksetmeta",
-        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column(
+            "id",
+            sa.Integer(),
+            sa.Sequence("taskset_id_sequence"),
+            autoincrement=True,
+            nullable=False,
+        ),
         sa.Column("taskset_id", sa.String(length=155), nullable=True),
         sa.Column("result", sa.PickleType(), nullable=True),
         sa.Column("date_done", sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("taskset_id"),
         sqlite_autoincrement=True,
+    )
+    op.execute(
+        sa.schema.CreateSequence(sa.Sequence("taskset_id_sequence"), if_not_exists=True)
     )
     # ### end Alembic commands ###
 
@@ -193,3 +211,7 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_user_id"), table_name="user")
     op.drop_table("user")
     # ### end Alembic commands ###
+    op.execute(sa.schema.DropSequence(sa.Sequence("task_id_sequence"), if_exists=True))
+    op.execute(
+        sa.schema.DropSequence(sa.Sequence("taskset_id_sequence"), if_exists=True)
+    )

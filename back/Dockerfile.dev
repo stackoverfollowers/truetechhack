@@ -1,5 +1,9 @@
 FROM python:3.10
 
+RUN apt-get update -y && apt install libgl1-mesa-glx -y && apt install 'ffmpeg' 'libsm6' 'libxext6' -y \
+    && apt-get clean \ 
+    && rm -rf /var/lib/apt/lists/* 
+
 WORKDIR /src
 ADD  /requirements.txt /on_build.sh /
 
