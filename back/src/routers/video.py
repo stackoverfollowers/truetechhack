@@ -26,7 +26,7 @@ from dependencies import (
     get_current_user,
     get_video,
     get_video_prefs,
-    get_video_with_timings,
+    get_video_with_timings, get_video_timing_for_feedback,
 )
 from schemas import (
     UploadedVideoSchema,
@@ -138,3 +138,8 @@ async def put_video_preferences(
     session.add(current_prefs)
     await session.commit()
     return VideoPreferencesSchema.from_orm(current_prefs)
+
+
+@router.post("{video_id}/epileptic_feedback")
+async def post_epileptic_feedback(timing=Depends(get_video_timing_for_feedback)):
+    return {"status": "ok"}
