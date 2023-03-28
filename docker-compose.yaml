@@ -58,6 +58,7 @@ services:
     image: back
     depends_on:
       - back
+      - redis
     command: celery -A celery_conf worker -l INFO -f /logs/celery_worker.log --concurrency 4
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-user}

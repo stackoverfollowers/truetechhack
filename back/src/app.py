@@ -14,7 +14,7 @@ settings = get_settings()
 def create_app():
     app = FastAPI()
 
-    @app.get("/me")
+    @app.get("/me", tags=["user"])
     async def get_me(user: User = Depends(get_current_user)):
         return UserSchema.from_orm(user)
 

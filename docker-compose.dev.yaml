@@ -51,12 +51,14 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
     volumes:
       - ./back/src/:/src
+      - static_volume:${STATIC_PATH:-/static}
 
 
   worker_celery:
     image: back
     depends_on:
       - back
+      - redis
     command: celery -A celery_conf worker -l INFO -f /logs/celery_worker.log --concurrency 4
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-user}
@@ -75,6 +77,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
     volumes:
       - ./back/src/:/src
+      - static_volume:${STATIC_PATH:-/static}
 
   front:
     depends_on:
@@ -85,3 +88,8 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "3000:${FRONT_PORT:-3000}"
+
+
+volumes:
+  static_volume:
+    driver: local

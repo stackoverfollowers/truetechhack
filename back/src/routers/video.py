@@ -23,11 +23,11 @@ from db.engine import get_async_session
 from db.models import User, Video
 from dependencies import ensure_admin, get_current_user, get_video
 from schemas import UploadedVideoSchema
-from tasks import preprocess_video
+from tasks import preprocess_video_task
 
 settings = get_settings()
 
-router = APIRouter()
+router = APIRouter(tags=["videos"])
 
 
 @router.get("/video/{video_id}", response_model=UploadedVideoSchema)
@@ -59,7 +59,7 @@ async def upload_video(
     session.add(video)
     await session.commit()
     await session.refresh(video)
-    preprocess_video.delay(video_id=video.id)
+    preprocess_video_task.delay(video_id=video.id)
     return UploadedVideoSchema.from_orm(video)
 
 
