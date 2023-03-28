@@ -1,7 +1,7 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { useSignupMutation } from '@/services/auth';
+import { useSignupMutation } from '@/redux/services/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, ReactElement, useState } from 'react';
@@ -92,7 +92,7 @@ const SignUp = () => {
 						<div className="flex text-sm items-center justify-between">
 							<span>Уже есть аккаунт?</span>
 							<Link
-								href="/auth/signin"
+								href="/login"
 								className="font-medium text-primary hover:text-primary"
 							>
 								Войти

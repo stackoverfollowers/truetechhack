@@ -1,8 +1,8 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { useSigninMutation } from '@/services/auth';
-import { setCredentials } from '@/services/authSlice';
+import { useSigninMutation } from '@/redux/services/auth';
+import { setCredentials } from '@/redux/slices/authSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FormEvent, ReactElement, useState } from 'react';
@@ -100,7 +100,7 @@ const SignIn = () => {
 						<div className="flex text-sm items-center justify-between">
 							<span>У вас ещё нет аккаунта?</span>
 							<Link
-								href="/auth/signup"
+								href="/register"
 								className="font-medium text-primary hover:text-primary"
 							>
 								Зарегистрироваться
