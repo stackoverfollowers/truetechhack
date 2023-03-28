@@ -1,62 +1,130 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { ReactElement } from 'react';
+import { useUser } from '@/hooks/use-user';
+import { useUploadVideoMutation } from '@/redux/services/user';
+import cx from 'clsx';
+import { ChangeEvent, FormEvent, ReactElement, useRef, useState } from 'react';
 import { FiUser, FiVideo } from 'react-icons/fi';
 
 const Profile = () => {
+	const [video, setVideo] = useState<File | null>(null);
+
+	const { user, isLoading: isUserLoading } = useUser();
+
+	const [uploadVideo, { isLoading: isUploading, isError: isUploadError }] =
+		useUploadVideoMutation();
+
+	const fileInputRef = useRef<any>();
+
+	const handleVideoSelect = (e: ChangeEvent<HTMLInputElement>) => {
+		const selectedFile = e.target.files?.[0];
+		if (selectedFile) {
+			setVideo(selectedFile);
+		}
+	};
+
+	const handleUpload = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (video) {
+			const payload = uploadVideo(video).unwrap();
+			console.log('fulfilled', payload);
+		}
+
+		// @ts-ignore
+		fileInputRef.value = '';
+	};
+
 	return (
 		<div className="w-full max-w-7xl flex flex-col gap-y-8">
 			<div className="bg-accents-10 rounded-md p-4">
-				<div className="border-b border-accents-8 pb-12 space-y-6">
-					<h2 className="text-lg font-semibold leading-7">Профиль</h2>
+				<h2 className="text-lg font-semibold leading-7">Профиль</h2>
+				<p className="mt-1 text-sm leading-6 text-accents-6">
+					This information will be displayed publicly so be careful what you
+					share.
+				</p>
 
-					<div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-						<div className="sm:col-span-4">
-							<label
-								htmlFor="username"
-								className="block text-sm font-medium leading-6"
-							>
-								Имя пользователя
-							</label>
-							<div className="mt-2">
-								<div className="flex rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 sm:max-w-md">
-									<span className="flex select-none items-center pl-3 text-primary/80 sm:text-sm">
-										stackoverfollowers/
-									</span>
-									<Input
-										type="text"
-										name="username"
-										id="username"
-										className="block flex-1 border-0 bg-transparent py-1.5 pl-1 focus:ring-0"
-										placeholder="username"
-									/>
-								</div>
+				<div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+					<div className="sm:col-span-4">
+						<label
+							htmlFor="username"
+							className="block text-sm font-medium leading-6"
+						>
+							Имя пользователя
+						</label>
+						<div className="mt-2">
+							<div className="flex rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 sm:max-w-md">
+								<span className="flex select-none items-center pl-3 text-primary/80 text-sm">
+									stackoverfollowers/
+								</span>
+								<span className="text-sm py-1.5 pl-1">{user?.username}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<form className="bg-accents-10 rounded-md p-4" onSubmit={handleUpload}>
+				<div className="border-b border-accents-8 pb-12">
+					<h2 className="text-lg font-semibold leading-7">Видео</h2>
+					<p className="mt-1 text-sm leading-6 text-accents-6">
+						This information will be displayed publicly so be careful what you
+						share.
+					</p>
+
+					<div className="col-span-full mt-8">
+						<div className="mt-2">
+							<div className="flex w-fit rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+								<input
+									id="fileInput"
+									ref={fileInputRef}
+									type="file"
+									accept="video/mp4"
+									onChange={handleVideoSelect}
+									className="hidden"
+									placeholder="username"
+								/>
+								{!video ? (
+									<button
+										className="text-sm px-3 py-[5px]"
+										onClick={() => fileInputRef.current.click()}
+									>
+										Загрузить
+									</button>
+								) : (
+									<div className="flex items-center px-3 gap-x-3">
+										<div className="text-sm text-primary/80">
+											{video && video.name}
+										</div>
+
+										<button
+											className="text-sm  py-[5px]"
+											onClick={() => setVideo(null)}
+											disabled={isUploading}
+										>
+											Удалить
+										</button>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div className="mt-6 flex items-center justify-end">
-					<Button type="submit">Сохранить</Button>
+				<div
+					className={cx(
+						isUploadError ? 'justify-between' : 'justify-end',
+						'mt-4 flex items-center'
+					)}
+				>
+					{isUploadError && (
+						<span className="text-error text-sm">Повторите попытку позже.</span>
+					)}
+					<Button type="submit" disabled={isUploading}>
+						Сохранить
+					</Button>
 				</div>
-			</div>
-			<div className="bg-accents-10 rounded-md p-4">
-				<div className="border-b border-accents-8 pb-12">
-					<h2 className="text-lg font-semibold leading-7">Видео</h2>
-
-					<div className="col-span-full mt-10">
-						<div className="mt-2 flex items-center gap-x-3">
-							<FiVideo className="h-6 w-6 text-gray-300" aria-hidden="true" />
-							<Button type="button">Загрузить</Button>
-						</div>
-					</div>
-				</div>
-
-				<div className="mt-6 flex items-center justify-end">
-					<Button type="submit">Сохранить</Button>
-				</div>
-			</div>
+			</form>
 		</div>
 	);
 };
