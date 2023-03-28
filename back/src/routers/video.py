@@ -41,7 +41,7 @@ settings = get_settings()
 router = APIRouter(tags=["videos"], prefix="/videos")
 
 
-@router.get("/{video_id}/timings")
+@router.get("/{video_id}/timings", response_model=VideoTimingsSchema)
 async def get_video_timings(video: Video = Depends(get_video_with_timings)):
     return VideoTimingsSchema.from_orm(video)
 
@@ -102,7 +102,7 @@ async def delete_video(
     return {"status": "ok"}
 
 
-@router.get("/{video_id}/stream", status_code=206)
+@router.get("/{video_id}/stream", status_code=206, response_class=Response)
 async def get_stream(
     video: Video = Depends(get_video), video_range=Header(alias="range")
 ):
@@ -121,14 +121,14 @@ async def get_stream(
         return Response(data, status_code=206, headers=headers, media_type="video/mp4")
 
 
-@router.get("/{video_id}/preferences")
+@router.get("/{video_id}/preferences", response_model=VideoPreferencesSchema)
 async def get_video_preferences(
     video_preferences: VideoPreferences = Depends(get_video_prefs),
 ):
     return VideoPreferencesSchema.from_orm(video_preferences)
 
 
-@router.put("/{video_id}/preferences")
+@router.put("/{video_id}/preferences", response_model=VideoPreferencesSchema)
 async def put_video_preferences(
     form_data: VideoPreferencesInSchema,
     current_prefs: VideoPreferences = Depends(get_video_prefs),

@@ -26,6 +26,6 @@ async def post_preferences(
     return {"status": "ok"}
 
 
-@router.get("/me")
+@router.get("/me", response_model=UserSchema)
 async def get_me(user: User = Depends(get_current_user)):
     return UserSchema.from_orm(user)

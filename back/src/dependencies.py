@@ -133,6 +133,8 @@ async def get_video_timing_for_feedback(
         type=VideoType.test
     )
     session.add(video)
+    # TODO: поменять это на нужную таску
+    # preprocess_video_task.delay(video_id=video.id)
     return
 
 
