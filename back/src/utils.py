@@ -18,6 +18,11 @@ class SiteTheme(str, enum.Enum):
     trit = "trit"
 
 
+class VideoType(str, enum.Enum):
+    default = "default"
+    test = "test"
+
+
 def get_hashed_password(password: str) -> str:
     return password_context.hash(password)
 

@@ -2,6 +2,7 @@ import datetime
 
 from pydantic import BaseModel, SecretStr
 
+from schemas_mixins import PydanticTimestampMixin
 from utils import SiteTheme
 
 
@@ -10,10 +11,8 @@ class UserInSchema(BaseModel):
     password: SecretStr
 
 
-class UserSchema(UserInSchema):
+class UserSchema(UserInSchema, PydanticTimestampMixin):
     id: int
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
 
     class Config:
         orm_mode = True
@@ -21,8 +20,6 @@ class UserSchema(UserInSchema):
 
 class UploadedVideoSchema(BaseModel):
     id: int
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
     filename: str
     author_id: int
 

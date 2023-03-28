@@ -9,7 +9,7 @@ import sqlalchemy as sa
 import sqlalchemy_utils
 from alembic import op
 
-from utils import SiteTheme
+from utils import SiteTheme, VideoType
 
 # revision identifiers, used by Alembic.
 revision = "3d363d89bdec"
@@ -66,6 +66,9 @@ def upgrade() -> None:
         sa.Column("filename", sa.String(length=255), nullable=False),
         sa.Column("path", sa.String(length=255), nullable=False),
         sa.Column("preprocessed", sa.Boolean(), nullable=False),
+        sa.Column(
+            "type", sqlalchemy_utils.types.choice.ChoiceType(VideoType), nullable=True
+        ),
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column(
             "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=True
@@ -86,10 +89,15 @@ def upgrade() -> None:
         sa.Column("video_id", sa.BigInteger(), nullable=False),
         sa.Column("start_time", sa.Integer(), nullable=False),
         sa.Column("end_time", sa.Integer(), nullable=False),
+        sa.Column("author_id", sa.BigInteger(), nullable=True),
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.ForeignKeyConstraint(
             ["video_id"],
             ["video.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["author_id"],
+            ["user.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )

@@ -5,7 +5,7 @@ from sqlalchemy_utils import ChoiceType
 
 from db.base import Base
 from db.mixins import TimestampMixin
-from utils import SiteTheme
+from utils import SiteTheme, VideoType
 
 
 class User(Base, TimestampMixin):
@@ -15,6 +15,7 @@ class User(Base, TimestampMixin):
     uploaded_videos = relationship("Video")
     video_preferences = relationship("VideoPreferences")
     user_preference = relationship("UserPreferences")
+    epileptic_timings = relationship("EpilepticTiming")
 
     def __str__(self):
         return f"User ({self.username})"
@@ -25,6 +26,7 @@ class Video(Base, TimestampMixin):
     filename = Column(String(length=255), nullable=False)
     path = Column(String(length=255), nullable=False)
     preprocessed = Column(Boolean, default=False, nullable=False)
+    type = Column(ChoiceType(VideoType, impl=String()), default=VideoType.default.value)
 
     author = relationship("User", back_populates="uploaded_videos")
 
@@ -82,7 +84,10 @@ class EpilepticTiming(Base):
     start_time = Column(Integer, nullable=False)
     end_time = Column(Integer, nullable=False)
 
+    author_id = Column(ForeignKey("user.id"), default=None, nullable=True)
+
     video = relationship("Video", back_populates="epileptic_timings")
+    author = relationship("User", back_populates="epileptic_timings")
 
     def __str__(self) -> str:
         return f"({self.start_time}, {self.end_time})"
