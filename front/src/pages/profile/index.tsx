@@ -1,16 +1,14 @@
 import Layout from '@/components/Layout';
 import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import { useUser } from '@/hooks/use-user';
-import { useUploadVideoMutation } from '@/redux/services/user';
+import { useUploadVideoMutation } from '@/redux/services/stream';
+import { useGetUserQuery } from '@/redux/services/user';
 import cx from 'clsx';
 import { ChangeEvent, FormEvent, ReactElement, useRef, useState } from 'react';
-import { FiUser, FiVideo } from 'react-icons/fi';
 
 const Profile = () => {
 	const [video, setVideo] = useState<File | null>(null);
 
-	const { user, isLoading: isUserLoading } = useUser();
+	const { data: user, isLoading: isUserLoading } = useGetUserQuery();
 
 	const [uploadVideo, { isLoading: isUploading, isError: isUploadError }] =
 		useUploadVideoMutation();
@@ -41,8 +39,8 @@ const Profile = () => {
 			<div className="bg-accents-10 rounded-md p-4">
 				<h2 className="text-lg font-semibold leading-7">Профиль</h2>
 				<p className="mt-1 text-sm leading-6 text-accents-6">
-					This information will be displayed publicly so be careful what you
-					share.
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+					eiusmod tempor incididunt ut labore et dolore magna aliqua.
 				</p>
 
 				<div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -55,10 +53,10 @@ const Profile = () => {
 						</label>
 						<div className="mt-2">
 							<div className="flex rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 sm:max-w-md">
-								<span className="flex select-none items-center pl-3 text-primary/80 text-sm">
+								<span className="flex h-8 select-none items-center pl-3 text-primary/80 text-sm">
 									stackoverfollowers/
 								</span>
-								<span className="text-sm py-1.5 pl-1">{user?.username}</span>
+								<span className="text-sm py-[5px] pl-1">{user?.username}</span>
 							</div>
 						</div>
 					</div>
@@ -68,8 +66,8 @@ const Profile = () => {
 				<div className="border-b border-accents-8 pb-12">
 					<h2 className="text-lg font-semibold leading-7">Видео</h2>
 					<p className="mt-1 text-sm leading-6 text-accents-6">
-						This information will be displayed publicly so be careful what you
-						share.
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+						eiusmod tempor incididunt ut labore et dolore magna aliqua.
 					</p>
 
 					<div className="col-span-full mt-8">

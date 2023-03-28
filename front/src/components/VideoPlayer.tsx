@@ -5,7 +5,7 @@ import {
 	setPlayPause,
 	setProgress,
 	setStop,
-} from '@/redux/services/playerSlice';
+} from '@/redux/slices/playerSlice';
 import VolumeControl from './player-ui/VolumeControl';
 import DurationDisplay from './player-ui/DurationDisplay';
 import Seek from './player-ui/Seek';
@@ -16,7 +16,8 @@ import Filters from './player-ui/FiltersButton';
 import { FiMaximize2 } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
-import cx from 'clsx';
+import { useTheme } from 'next-themes';
+import { COLOR_BLIND_FILTERS } from '@/redux/slices/themeSlice';
 
 interface VideoPlayerProps {
 	playerRef: any;
@@ -24,24 +25,20 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	const dispatch = useDispatch();
-	const { seeking, ...rest } = useSelector((state: RootState) => state.player);
-	const theme = useSelector((state: RootState) => state.theme);
+	const { seeking, url, ...rest } = useSelector(
+		(state: RootState) => state.player
+	);
+	const { filters } = useSelector((state: RootState) => state.theme);
+	const { theme } = useTheme();
 
 	const [showOverlay, setShowOverlay] = useState(false);
 
-	const colorBlindFilters = {
-		default: '',
-		deut: 'grayscale(70%) brightness(150%) contrast(75%) hue-rotate(-40deg)',
-		prot: 'grayscale(80%) brightness(150%) contrast(75%) hue-rotate(-10deg)',
-		trit: 'grayscale(80%) brightness(120%) contrast(125%) hue-rotate(150deg)',
-	};
-
 	const filterStyle = {
-		filter: `brightness(${theme.filters.brightness}%) contrast(${
-			theme.filters.contrast
-		}%) saturate(${theme.filters.saturation}%) blur(${
-			theme.filters.sharpness
-		}px) ${colorBlindFilters[theme.type]}`,
+		filter: `brightness(${filters.brightness}%) contrast(${
+			filters.contrast
+		}%) saturate(${filters.saturation}%) ${
+			COLOR_BLIND_FILTERS[theme as keyof typeof COLOR_BLIND_FILTERS]
+		}`,
 	};
 
 	const handleClickFullscreen = () => {
@@ -60,13 +57,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 		setShowOverlay(isBadFrame);
 	}, [rest.progress.playedSeconds]);
 
-	// useEffect(() => {
-	// 	if (badFrames.includes(Math.floor(rest.progress.playedSeconds))) {
-	// 		setShowOverlay(true);
-	// 	} else {
-	// 		setShowOverlay(false);
-	// 	}
-	// }, [rest.progress.playedSeconds]);
+	console.log('url', url);
 
 	return (
 		<div className="relative group h-full w-full group">
@@ -77,13 +68,16 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				onDuration={v => dispatch(setDuration(v))}
 				{...rest}
 				style={filterStyle}
+				onReady={() => console.log('onReady')}
+				onStart={() => console.log('onStart')}
+				onError={e => console.log('onError', e)}
 				onProgress={state => {
 					if (!seeking) {
 						dispatch(setProgress(state));
 					}
 				}}
 				onEnded={() => dispatch(setStop())}
-				url="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+				url={url}
 			/>
 			<Transition
 				show={showOverlay}
@@ -96,12 +90,9 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 			>
 				<div className="absolute inset-0 bg-black h-full w-full pointer-events-none" />
 			</Transition>
-			{/* {showOverlay && (
-				<div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none h-full w-full" />
-			)} */}
 			<div
 				onClick={() => dispatch(setPlayPause())}
-				className="h-[90%] w-full z-10 absolute inset-0"
+				className="h-[86%] w-full z-10 absolute inset-0"
 			/>
 			<div className="flex-col absolute bottom-2 items-center h-12 px-3 w-full transition-opacity group-hover:opacity-100 flex opacity-100">
 				{/* Progress bar */}

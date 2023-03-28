@@ -29,7 +29,8 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 		<Component
 			className={cx(
 				className,
-				'rounded-md py-[5px] px-3 text-sm font-semibold text-center outline-none bg-accents-1 text-black hover:bg-accents-3'
+				'rounded-md py-[5px] px-3 text-sm font-semibold text-center outline-none bg-accents-1 text-black hover:bg-accents-3',
+				'disabled:opacity-50 disabled:pointer-events-none'
 			)}
 			style={{ width, ...style }}
 			{...rest}

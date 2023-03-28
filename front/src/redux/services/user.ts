@@ -1,6 +1,6 @@
 import { baseQuery } from '@/lib/base-query';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { ThemeState } from './themeSlice';
+import { Theme } from '../slices/themeSlice';
 
 export interface User {
 	id: number;
@@ -9,7 +9,7 @@ export interface User {
 
 interface Preferences {
 	user_id: number;
-	theme: ThemeState['type'];
+	theme: Theme;
 }
 
 export const userApi = createApi({
@@ -23,13 +23,12 @@ export const userApi = createApi({
 				{ type: 'User', id: 'preferences' },
 			],
 		}),
-		updatePreferences: build.mutation<User, Partial<Preferences>>({
+		updatePreferences: build.mutation<Preferences, Partial<Preferences>>({
 			query(data) {
-				const { user_id, ...body } = data;
 				return {
-					url: `/preferences/${user_id}`,
+					url: `/preferences`,
 					method: 'PUT',
-					body,
+					body: data,
 				};
 			},
 			invalidatesTags: (result, error, id) => [
@@ -40,18 +39,6 @@ export const userApi = createApi({
 			query: () => `/me`,
 			providesTags: (result, error, id) => [{ type: 'User', id: 'me' }],
 		}),
-		uploadVideo: build.mutation<any, File>({
-			query: data => {
-				const formData = new FormData();
-				formData.append('file', data);
-
-				return {
-					url: `/video`,
-					method: 'POST',
-					body: formData,
-				};
-			},
-		}),
 	}),
 });
 
@@ -59,5 +46,4 @@ export const {
 	useGetPreferencesQuery,
 	useUpdatePreferencesMutation,
 	useGetUserQuery,
-	useUploadVideoMutation,
 } = userApi;

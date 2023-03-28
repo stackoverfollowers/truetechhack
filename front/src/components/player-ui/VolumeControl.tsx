@@ -1,5 +1,5 @@
 import generateRangeStyle from '@/lib/generate-range-style';
-import { setMute, setVolume } from '@/redux/services/playerSlice';
+import { setMute, setVolume } from '@/redux/slices/playerSlice';
 import { RootState } from '@/redux/store';
 import { FiVolume1, FiVolumeX } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';

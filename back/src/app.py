@@ -5,23 +5,23 @@ from starlette.middleware.cors import CORSMiddleware
 from constants import get_settings
 from db.models import User
 from dependencies import get_current_user
-from routers import auth_router, preferences_router, video_router
+from routers import auth_router, user_router, video_router
 from schemas import UserSchema
 
 settings = get_settings()
 
 
 def create_app():
-    app = FastAPI()
-
-    @app.get("/me", tags=["user"])
-    async def get_me(user: User = Depends(get_current_user)):
-        return UserSchema.from_orm(user)
+    app = FastAPI(
+        title="Kion Stackoverfollowers",
+        version="0.0.1",
+        description="API of our solution [source code](https://github.com/stackoverfollowers/truetechhack)",
+    )
 
     app.include_router(auth_router)
     app.include_router(video_router)
-    app.include_router(preferences_router)
-    add_pagination(app)
+    app.include_router(user_router)
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -30,4 +30,5 @@ def create_app():
         allow_headers=["*"],
         expose_headers=["*"],
     )
+    add_pagination(app)
     return app

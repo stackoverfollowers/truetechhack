@@ -1,4 +1,4 @@
-import { setPlayPause } from '@/redux/services/playerSlice';
+import { setPlayPause } from '@/redux/slices/playerSlice';
 import { RootState } from '@/redux/store';
 import { FiPause, FiPlay } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';

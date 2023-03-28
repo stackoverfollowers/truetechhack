@@ -1,4 +1,4 @@
-import { setProgress, setSeeking } from '@/redux/services/playerSlice';
+import { setProgress, setSeeking } from '@/redux/slices/playerSlice';
 import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { forwardRef } from 'react';
