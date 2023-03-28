@@ -4,9 +4,9 @@ import { combineReducers } from 'redux';
 import { streamApi } from './services/stream';
 import { authApi } from './services/auth';
 import { userApi } from './services/user';
-import playerReducer from './services/playerSlice';
-import themeReducer from './services/themeSlice';
-import authReducer from './services/authSlice';
+import playerReducer from './slices/playerSlice';
+import themeReducer from './slices/themeSlice';
+import authReducer from './slices/authSlice';
 
 import storage from 'redux-persist/lib/storage';
 import {
@@ -38,8 +38,6 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
 	reducer: persistedReducer,
-	// Adding the api middleware enables caching, invalidation, polling,
-	// and other useful features of `rtk-query`.
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({
 			serializableCheck: {
@@ -51,7 +49,5 @@ export const store = configureStore({
 			.concat(userApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

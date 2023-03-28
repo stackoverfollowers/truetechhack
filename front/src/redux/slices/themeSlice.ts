@@ -8,6 +8,7 @@ export interface ThemeState {
 		saturation: number;
 		sharpness: number;
 	};
+	// fs: 'xs' | 'sm' | 'base' | 'lg';
 }
 
 const initialState: ThemeState = {
@@ -18,6 +19,7 @@ const initialState: ThemeState = {
 		saturation: 100,
 		sharpness: 0,
 	},
+	// fs: 'sm'
 };
 
 const themeSlice = createSlice({

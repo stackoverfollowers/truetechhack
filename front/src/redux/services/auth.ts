@@ -1,4 +1,4 @@
-import { baseQuery } from '@/lib/base-qeury';
+import { baseQuery } from '@/lib/base-query';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { User } from './user';
 
@@ -22,7 +22,7 @@ export const authApi = createApi({
 				data.append('password', password);
 
 				return {
-					url: '/api/login',
+					url: '/login',
 					method: 'POST',
 					body: data,
 					headers: {
@@ -34,7 +34,7 @@ export const authApi = createApi({
 		signup: builder.mutation<AuthResponse, AuthPayload>({
 			query: data => {
 				return {
-					url: '/api/signup',
+					url: '/signup',
 					method: 'POST',
 					body: data,
 					headers: {
