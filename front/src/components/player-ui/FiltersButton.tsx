@@ -2,18 +2,12 @@ import {
 	setBrightness,
 	setContrast,
 	setSaturation,
-	setSharpness,
-} from '@/redux/services/themeSlice';
+} from '@/redux/slices/themeSlice';
 import { RootState } from '@/redux/store';
 import { Popover, Transition } from '@headlessui/react';
-import {
-	FiChevronRight,
-	FiFilter,
-	FiRefreshCcw,
-	FiRotateCcw,
-} from 'react-icons/fi';
+import { FiChevronRight, FiFilter, FiRotateCcw } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { ChangeEvent, Fragment, InputHTMLAttributes } from 'react';
+import { Fragment, InputHTMLAttributes } from 'react';
 import generateRangeStyle from '@/lib/generate-range-style';
 
 interface Option extends InputHTMLAttributes<HTMLInputElement> {
@@ -27,7 +21,7 @@ interface Option extends InputHTMLAttributes<HTMLInputElement> {
 
 const Filters = () => {
 	const dispatch = useDispatch();
-	const { brightness, contrast, saturation, sharpness } = useSelector(
+	const { brightness, contrast, saturation } = useSelector(
 		(state: RootState) => state.theme.filters
 	);
 
@@ -57,15 +51,6 @@ const Filters = () => {
 			max: 200,
 			defaultValue: 100,
 			setValue: (v: string) => dispatch(setSaturation(v)),
-			icon: FiChevronRight,
-		},
-		{
-			label: 'Резкость',
-			value: sharpness,
-			min: 0,
-			max: 10,
-			defaultValue: 0,
-			setValue: (v: string) => dispatch(setSharpness(v)),
 			icon: FiChevronRight,
 		},
 	];

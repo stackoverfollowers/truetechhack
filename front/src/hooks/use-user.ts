@@ -4,17 +4,18 @@ import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 export const useUser = () => {
-	// const user = useSelector((state: RootState) => state.auth.user);
+	// const { data: user, isLoading } = useGetUserQuery();
 
-	const { data: user, isLoading } = useGetUserQuery();
+	// console.log('useUser user', user, isLoading);
 
-	console.log('useUser user', user, isLoading);
+	// useEffect(() => {
+	// 	if (!isLoading && !user) {
+	// 		// Handle error or redirect to login page
 
-	useEffect(() => {
-		if (!isLoading && !user) {
-			// Handle error or redirect to login page
-		}
-	}, [isLoading, user]);
+	// 	}
+	// }, [isLoading, user]);
+	// return { user, isLoading };
 
-	return { user, isLoading };
+	const user = useSelector((state: RootState) => state.auth.user);
+	return useMemo(() => ({ user }), [user]);
 };

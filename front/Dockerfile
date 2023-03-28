@@ -4,7 +4,7 @@ WORKDIR /usr/src/app/client
 
 COPY ./src .
 
-RUN yarn global add pnpm && pnpm i --frozen-lockfile
+RUN yarn global add pnpm && pnpm i
 
 RUN pnpm run build
 

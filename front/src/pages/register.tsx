@@ -23,7 +23,7 @@ const SignUp = () => {
 
 		const register = async () => {
 			await signup({ username, password }).unwrap();
-			router.push('/');
+			router.push('/login');
 		};
 
 		register().catch(() => setError('Что-то пошло не так'));

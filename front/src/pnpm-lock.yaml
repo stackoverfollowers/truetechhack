@@ -10,6 +10,7 @@ specifiers:
   clsx: ^1.2.1
   eslint: 8.36.0
   eslint-config-next: 13.2.4
+  lodash.debounce: ^4.0.8
   next: 13.2.4
   next-themes: ^0.2.1
   postcss: ^8.4.21
@@ -33,6 +34,7 @@ dependencies:
   clsx: 1.2.1
   eslint: 8.36.0
   eslint-config-next: 13.2.4_j4766f7ecgqbon3u7zlxn5zszu
+  lodash.debounce: 4.0.8
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   next-themes: 0.2.1_ld2jel3hspngo3u5lti2kgl2sq
   react: 18.2.0
@@ -1727,6 +1729,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: false
+
+  /lodash.debounce/4.0.8:
+    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
     dev: false
 
   /lodash.merge/4.6.2:
