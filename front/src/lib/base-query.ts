@@ -1,8 +1,8 @@
-import { RootState } from '@/store';
+import { RootState } from '@/redux/store';
 import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 
 export const baseQuery = fetchBaseQuery({
-	baseUrl: process.env.SERVER_URL,
+	baseUrl: 'http://localhost:3001/',
 	prepareHeaders: (headers, { getState }) => {
 		// get token from local storage
 		// const token = localStorage.getItem('token');
