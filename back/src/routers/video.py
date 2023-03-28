@@ -110,12 +110,12 @@ async def get_videos_paginator(
     return await paginate(session, select(Video).filter_by(preprocessed=preprocessed))
 
 
-@router.get("/video/{video_id}/preferences")
+@router.get("/{video_id}/preferences")
 async def get_video_preferences(video_preferences: VideoPreferences = Depends(get_video_prefs)):
     return VideoPreferencesSchema.from_orm(video_preferences)
 
 
-@router.put("/video/{video_id}/preferences")
+@router.put("/{video_id}/preferences")
 async def put_video_preferences(
         form_data: VideoPreferencesInSchema,
         current_prefs: VideoPreferences = Depends(get_video_prefs),
