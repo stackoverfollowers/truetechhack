@@ -1,6 +1,6 @@
 name: CI
 on:
-    pull_request: 
+    push: 
         branches: [ 'main' ]
 jobs:
     build-and-push-images:
@@ -10,8 +10,10 @@ jobs:
             matrix:
                 include:
                     - dockerfile: ./Dockerfile
+                      context: ./back
                       image: andytakker/tth_back
                     - dockerfile: ./Dockerfile
+                      context: ./front
                       image: andytakker/tth_front
         permissions:
             contents: read
@@ -41,6 +43,7 @@ jobs:
               with:
                 file: ${{ matrix.dockerfile }}
                 push: true
+                context: ${{ matrix.context }}
                 tags: ${{ steps.meta.outputs.tags }}
                 labels: ${{ steps.meta.outputs.labels }}
 
