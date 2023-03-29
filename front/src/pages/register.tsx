@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import useFontSize from '@/hooks/use-font-size';
 import { useSignupMutation } from '@/redux/services/auth';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -35,6 +36,9 @@ const SignUp = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Регистрация – stackoverfollowers</title>
+			</Head>
 			<div className="flex w-full max-w-7xl min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
 					<div className="flex flex-col justify-center items-center">

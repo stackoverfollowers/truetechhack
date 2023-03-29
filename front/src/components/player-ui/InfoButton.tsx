@@ -1,29 +1,32 @@
 import useFontSize from '@/hooks/use-font-size';
 import { useAppSelector } from '@/redux/hooks';
 import { Popover, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import cx from 'clsx';
+import { Fragment, useEffect, useState } from 'react';
 import { FiInfo, FiList } from 'react-icons/fi';
 
 const InfoButton = () => {
 	const fs = useFontSize();
 
-	const epilepticTimings = useAppSelector(
-		state => state.player.epilepticTimings
-	);
+	const player = useAppSelector(state => state.player);
 
-	if (!epilepticTimings) {
+	if (!player.epilepticTimings?.length) {
 		return null;
 	}
 
+	console.log('player.pulse', player.pulse);
+
 	return (
-		<Popover className="relative">
+		<Popover className="relative h-7 w-7 mx-[10px]">
 			{({ open }) => (
 				<>
-					<Popover.Button className="flex items-center justify-center h-12 w-12 outline-none">
-						<FiInfo
-							className="h-7 w-7 fill-primary text-black shrink-0 cursor-pointer"
-							aria-hidden="true"
-						/>
+					<Popover.Button
+						className={cx(
+							'inline-flex justify-center items-center w-7 h-7 rounded-full bg-primary text-white',
+							player.pulse && 'animate-pulse'
+						)}
+					>
+						<FiInfo className="h-5 w-5 text-black" />
 					</Popover.Button>
 					<Transition
 						as={Fragment}
@@ -46,7 +49,7 @@ const InfoButton = () => {
 									</div>
 								</div>
 								<ul className="flex flex-col gap-y-2">
-									{epilepticTimings?.map((t, i) => (
+									{player.epilepticTimings?.map((t, i) => (
 										<li className="list-none" key={i}>
 											с {t.start_time}с по {t.end_time}с
 										</li>

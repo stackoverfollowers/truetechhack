@@ -60,23 +60,23 @@ const FeedbackButton = () => {
 										className="flex flex-col gap-y-2"
 										onSubmit={handleSumbit}
 									>
-										<div className="flex p-2 items-center w-full">
+										<div className="flex p-2 items-center">
 											<span className="mr-2">с</span>
 											<Input
-												type="time"
-												placeholder="01:32:00"
+												type="text"
+												placeholder="00:00:00"
 												step="2"
-												className="w-[106px]"
 												value={startTime}
+												className="w-[100px]"
 												onChange={e => setStartTime(e.target.value)}
 											/>
 											<span className="mx-2">по</span>
 											<Input
-												type="time"
-												placeholder="01:42:00"
+												type="text"
+												placeholder="00:00:00"
 												step="2"
-												className="w-[106px]"
 												value={endTime}
+												className="w-[100px]"
 												onChange={e => setEndTime(e.target.value)}
 											/>
 										</div>

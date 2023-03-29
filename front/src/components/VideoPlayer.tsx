@@ -1,8 +1,10 @@
 import {
 	setDuration,
+	setEpileptic,
 	setEpilepticTimings,
 	setPlayPause,
 	setProgress,
+	setPulse,
 	setStop,
 } from '@/redux/slices/playerSlice';
 import VolumeControl from './player-ui/VolumeControl';
@@ -22,6 +24,8 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import InfoButton from './player-ui/InfoButton';
 import FeedbackButton from './player-ui/FeedbackButton';
 import PlaybackRateButton from './player-ui/PlaybackRateButton';
+import { useUser } from '@/hooks/use-user';
+import { useGetPreferencesQuery } from '@/redux/services/user';
 
 interface VideoPlayerProps {
 	playerRef: any;
@@ -29,11 +33,15 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	const dispatch = useAppDispatch();
-	const { seeking, url, videoId, epilepticTimings, ...rest } = useAppSelector(
-		state => state.player
-	);
+	const { seeking, url, videoId, epilepticTimings, epileptic, ...rest } =
+		useAppSelector(state => state.player);
 	const { filters } = useAppSelector(state => state.theme);
 	const { theme } = useTheme();
+
+	const { user } = useUser();
+
+	const { data: preferences, isLoading: isPreferencesLoading } =
+		useGetPreferencesQuery(undefined, { skip: !user });
 
 	const [showOverlay, setShowOverlay] = useState(false);
 
@@ -59,6 +67,12 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 			const data: EpilepticTimingsResponse = await response.json();
 
 			dispatch(setEpilepticTimings(data.epileptic_timings));
+
+			if (preferences) {
+				dispatch(setEpileptic(preferences?.epileptic));
+			} else {
+				dispatch(setEpileptic(data.epileptic_timings.length > 0));
+			}
 		};
 
 		if (url) {
@@ -68,6 +82,8 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 
 	useEffect(() => {
 		if (epilepticTimings) {
+			const offsetTime = 10;
+
 			const isBadFrame = epilepticTimings.some(({ start_time, end_time }) => {
 				return (
 					rest.progress.playedSeconds >= start_time &&
@@ -75,12 +91,23 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				);
 			});
 
-			setShowOverlay(isBadFrame);
+			if (!epileptic) {
+				setShowOverlay(false);
+				dispatch(setPulse(false));
+			} else {
+				const shouldPulse =
+					isBadFrame ||
+					(rest.progress.playedSeconds >
+						epilepticTimings[0].start_time - offsetTime &&
+						rest.progress.playedSeconds < epilepticTimings[0].start_time);
+				setShowOverlay(isBadFrame);
+				dispatch(setPulse(shouldPulse));
+			}
 		}
 	}, [rest.progress.playedSeconds]);
 
 	return (
-		<div className="relative group h-full w-full group">
+		<div className="relative group h-full w-full group border border-accents-8">
 			<ReactPlayer
 				ref={playerRef}
 				width="100%"
@@ -112,7 +139,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				onClick={() => dispatch(setPlayPause())}
 				className="h-[86%] w-full z-10 absolute inset-0"
 			/>
-			<div className="flex-col absolute bottom-2 items-center h-12 px-3 w-full transition-opacity group-hover:opacity-100 flex opacity-100">
+			<div className="flex-col absolute bottom-0 items-center h-14 px-3 w-full transition-opacity group-hover:opacity-100 flex opacity-100">
 				{/* Progress bar */}
 				<div className="flex items-center w-full h-10 bottom-16">
 					<Seek ref={playerRef} />

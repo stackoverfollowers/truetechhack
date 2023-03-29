@@ -17,9 +17,12 @@ const FontsizeSwitch = () => {
 	const handleFontChange = () => {
 		dispatch(setAccessibleFontSize());
 
-		// if (user) {
-		// 	updatePreferences({ user_id: user?.id, fs: value });
-		// }
+		if (user) {
+			updatePreferences({
+				user_id: user?.id,
+				is_accessible_fontsize: accessibleFs,
+			});
+		}
 	};
 
 	return (

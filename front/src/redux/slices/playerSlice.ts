@@ -11,6 +11,7 @@ interface ProgressProps {
 interface PlayerState {
 	videoId: number | null;
 	epilepticTimings: EpilepticTimingsResponse['epileptic_timings'] | null;
+	epileptic: boolean;
 	url: string;
 	playing: boolean;
 	seeking: boolean;
@@ -21,11 +22,13 @@ interface PlayerState {
 	loaded: number;
 	duration: number;
 	playbackRate: number;
+	pulse: boolean;
 }
 
 const initialState: PlayerState = {
 	videoId: null,
 	epilepticTimings: null,
+	epileptic: false,
 	url: '',
 	playing: false,
 	seeking: false,
@@ -41,6 +44,7 @@ const initialState: PlayerState = {
 	loaded: 0,
 	duration: 0,
 	playbackRate: 1.0,
+	pulse: false,
 };
 
 const playerSlice = createSlice({
@@ -58,6 +62,12 @@ const playerSlice = createSlice({
 		},
 		setStop: state => {
 			state.playing = false;
+		},
+		setEpileptic: (state, action: PayloadAction<boolean>) => {
+			state.epileptic = action.payload;
+		},
+		setPulse: (state, action: PayloadAction<boolean>) => {
+			state.pulse = action.payload;
 		},
 		setMute: state => {
 			if (state.muted && state.volume === 0) {
@@ -123,6 +133,8 @@ export const {
 	setProgress,
 	setSeeking,
 	setEpilepticTimings,
+	setEpileptic,
+	setPulse,
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

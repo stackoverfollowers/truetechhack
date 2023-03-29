@@ -56,7 +56,7 @@ const PlaybackRateButton = () => {
 		<Listbox value={selectedPlaybackRate} onChange={handleThemeChange}>
 			{({ open }) => (
 				<>
-					<div style={fs.sm} className="relative z-10">
+					<div style={fs.sm} className="relative z-10 mx-[10px]">
 						<Listbox.Button
 							as="div"
 							style={fs.xs}

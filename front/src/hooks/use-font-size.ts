@@ -4,7 +4,7 @@ const useFontSize = () => {
 	const accessibleFs = useAppSelector(state => state.theme.accessibleFs);
 
 	const fontSizeToClassName = () => {
-		switch (accessibleFs) {
+		switch (!accessibleFs) {
 			case true:
 				return {
 					xs: { fontSize: '12px' },

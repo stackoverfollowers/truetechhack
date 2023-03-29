@@ -9,6 +9,7 @@ import LoginButton from './ui/LoginButton';
 import Image from 'next/image';
 import FontsizeSwitch from './ui/FontsizeSwitch';
 import useFontSize from '@/hooks/use-font-size';
+import cx from 'clsx';
 
 const Header = () => {
 	const fs = useFontSize();
@@ -19,14 +20,17 @@ const Header = () => {
 		{
 			label: 'Главная',
 			href: '/',
+			disabled: false,
 		},
 		{
 			label: 'Фильмы',
 			href: '#',
+			disabled: true,
 		},
 		{
 			label: 'Сериалы',
 			href: '#',
+			disabled: true,
 		},
 	];
 
@@ -46,12 +50,15 @@ const Header = () => {
 					</button>
 				</div>
 				<div className="hidden sm:flex sm:gap-x-4">
-					{navigation.map(({ label, href }, i) => (
+					{navigation.map(({ label, href, disabled }, i) => (
 						<Link
 							href={href}
 							key={i}
 							style={fs.base}
-							className="font-semibold relative block transition hover:text-primary"
+							className={cx(
+								'font-semibold relative block transition hover:text-primary select-none',
+								disabled && 'pointer-events-none text-accents-6'
+							)}
 						>
 							{label}
 						</Link>

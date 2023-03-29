@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 	const fs = useFontSize();
 
 	const rootClassName = cx(
-		'rounded-md py-[5px] px-3 flex justify-center items-center font-semibold text-center outline-none min-h-[32px]',
+		'rounded-md py-[5px] h-8 px-3 flex justify-center items-center font-semibold text-center outline-none min-h-[32px]',
 
 		{
 			'bg-accents-7 hover:bg-accents-6': variant === 'default',
@@ -64,7 +64,7 @@ const Button: React.FC<ButtonProps> = forwardRef((props, buttonRef) => {
 						cy="12"
 						r="10"
 						stroke="currentColor"
-						stroke-width="4"
+						strokeWidth="4"
 					></circle>
 					<path
 						className="opacity-75"
