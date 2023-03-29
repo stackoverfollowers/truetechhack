@@ -76,6 +76,7 @@ class UserPreferencesSchema(BaseModel):
         lambda x: str(x.code) if not isinstance(x, str) else x
     )
     is_accessible_fontsize: bool
+    epileptic: bool
 
     class Config:
         orm_mode = True

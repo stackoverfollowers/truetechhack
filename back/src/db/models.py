@@ -88,6 +88,7 @@ class UserPreferences(Base, TimestampMixin):
     )
     theme = Column(ChoiceType(THEME_CHOICES, impl=String()), default="default")
     is_accessible_fontsize = Column(Boolean, default=False)
+    epileptic = Column(Boolean, default=True)
 
     user = relationship("User", back_populates="user_preference", uselist=False)
 

@@ -76,7 +76,7 @@ def nextFrame(self):
         for i in range(self.inputframenum - 1):
             yield self._readFrame()
     except:
-        print(i, self.inputframenum)
+        pass
 
 
 def get_gray_frames_from_videos(videos: list[Video]) -> list:
