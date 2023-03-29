@@ -9,11 +9,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./Dockerfile
-            context: back
+          - dockerfile: ./back/Dockerfile
+            context: ./back
             image: andytakker/tth_back
-          - dockerfile: ./Dockerfile
-            context: front
+          - dockerfile: ./front/Dockerfile
+            context: ./front
             image: andytakker/tth_front
     permissions:
         contents: read
@@ -49,6 +49,6 @@ jobs:
           with:
             file: ${{ matrix.dockerfile }}
             push: true
-            context: ${{ github.workspace }}/${{ matrix.context }}
+            context: ${{ matrix.context }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
