@@ -1,3 +1,4 @@
+import useFontSize from '@/hooks/use-font-size';
 import { useSendTimingFeedbackMutation } from '@/redux/services/user';
 import { Popover, Transition } from '@headlessui/react';
 import { FormEvent, Fragment, useState } from 'react';
@@ -7,6 +8,8 @@ import Button from '../ui/Button';
 import Input from '../ui/Input';
 
 const FeedbackButton = () => {
+	const fs = useFontSize();
+
 	const [startTime, setStartTime] = useState<string>();
 	const [endTime, setEndTime] = useState<string>();
 
@@ -46,8 +49,11 @@ const FeedbackButton = () => {
 											aria-hidden="true"
 											className="h-4 w-4 shrink-0 mr-2"
 										/>
-										<div className="flex justify-between w-full mr-1 text-sm font-medium">
-											Сообщите об опасных кадрах
+										<div
+											style={fs.sm}
+											className="flex justify-between w-full mr-1 font-medium"
+										>
+											Сообщить об опасных кадрах
 										</div>
 									</div>
 									<form

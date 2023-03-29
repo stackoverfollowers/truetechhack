@@ -7,8 +7,12 @@ import Input from './ui/Input';
 import ThemeSwitch from './ui/ThemeSwitch';
 import LoginButton from './ui/LoginButton';
 import Image from 'next/image';
+import FontsizeSwitch from './ui/FontsizeSwitch';
+import useFontSize from '@/hooks/use-font-size';
 
 const Header = () => {
+	const fs = useFontSize();
+
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	const navigation = [
@@ -46,13 +50,15 @@ const Header = () => {
 						<Link
 							href={href}
 							key={i}
-							className="text-base font-semibold relative block transition hover:text-primary"
+							style={fs.base}
+							className="font-semibold relative block transition hover:text-primary"
 						>
 							{label}
 						</Link>
 					))}
 				</div>
 				<div className="hidden sm:flex sm:flex-1 sm:justify-end sm:items-center gap-x-2">
+					<FontsizeSwitch />
 					<ThemeSwitch />
 					<Input placeholder="Поиск" className="w-[200px]" />
 					<LoginButton />
@@ -66,7 +72,7 @@ const Header = () => {
 				onClose={setMobileMenuOpen}
 			>
 				<div className="fixed inset-0 z-10" />
-				<Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full bg-accents-10 overflow-y-auto  p-4 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+				<Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full bg-accents-10 overflow-y-auto p-4">
 					<div className="flex items-center justify-between">
 						<Image width={32} height={32} alt="Logo" src="logo.svg" />
 						<button type="button" onClick={() => setMobileMenuOpen(false)}>
@@ -74,13 +80,13 @@ const Header = () => {
 							<FiX className="h-6 w-6 text-accents-2" aria-hidden="true" />
 						</button>
 					</div>
-					<div className="mt-6 ">
-						<div className="space-y-2 text-base">
+					<div className="mt-6">
+						<div style={fs.base} className={`grid grid-cols-2 gap-2`}>
 							{navigation.map(({ label, href }, i) => (
 								<a
 									href={href}
 									key={i}
-									className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 relative transition hover:text-primary"
+									className="-mx-3 block rounded-lg py-2 px-3 font-semibold leading-7 relative transition hover:text-primary"
 								>
 									{label}
 								</a>
@@ -89,12 +95,13 @@ const Header = () => {
 					</div>
 					<div className="my-4 border-t border-accents-8" />
 					<div className="flex items-center justify-between w-fit gap-x-8">
-						<span className="text-base font-semibold leading-7">
+						<span style={fs.base} className="font-semibold leading-7">
 							Настройка темы
 						</span>
 						<ThemeSwitch />
+						<FontsizeSwitch />
 					</div>
-					<div className="mt-4 mb-8 border-t border-accents-8" />
+					<div className="my-4 border-t border-accents-8" />
 					<div className="flex w-full">
 						<LoginButton className="w-full" />
 					</div>
