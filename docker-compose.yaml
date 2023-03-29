@@ -62,7 +62,7 @@ services:
     depends_on:
       - back
       - redis
-    command: celery -A celery_conf worker -l INFO -f /logs/celery_worker.log --concurrency 4
+    command: celery -A celery_conf worker -Q preprocess_video -E -l INFO -f /logs/celery_worker.log --concurrency 4
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}

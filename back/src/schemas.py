@@ -75,6 +75,7 @@ class UserPreferencesSchema(BaseModel):
     _extract_theme = validator("theme", pre=True, allow_reuse=True)(
         lambda x: str(x.code) if not isinstance(x, str) else x
     )
+    is_accessible_fontsize: bool
 
     class Config:
         orm_mode = True

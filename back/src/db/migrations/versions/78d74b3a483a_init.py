@@ -45,6 +45,7 @@ def upgrade() -> None:
             ),
             nullable=True,
         ),
+        sa.Column("is_accessible_fontsize", sa.Boolean(), nullable=False),
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column(
             "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=True

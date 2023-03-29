@@ -78,31 +78,6 @@ services:
       - ./back/src/:/src
       - static_data:${STATIC_PATH:-/static}
 
-  celery_worker_create_ml_model:
-    image: back
-    depends_on:
-      - back
-      - redis
-    command: celery -A celery_conf worker -Q create_ml_model -E -l INFO -f /logs/celery_worker.log --concurrency 4
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_HOST: ${POSTGRES_HOST:-db}
-
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-secret}
-      JWT_REFRESH_SECRET_KEY: ${JWT_REFRESH_SECRET_KEY:-secret2}
-      
-      STATIC_PATH: ${STATIC_PATH:-/static}
-
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
-    volumes:
-      - ./back/src/:/src
-      - static_data:${STATIC_PATH:-/static}
-
   front:
     depends_on:
       - db

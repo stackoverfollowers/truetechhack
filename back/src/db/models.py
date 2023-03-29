@@ -87,11 +87,15 @@ class UserPreferences(Base, TimestampMixin):
         ForeignKey("user.id", ondelete="CASCADE"), index=True, nullable=False
     )
     theme = Column(ChoiceType(THEME_CHOICES, impl=String()), default="default")
+    is_accessible_fontsize = Column(Boolean, default=False)
 
     user = relationship("User", back_populates="user_preference", uselist=False)
 
     def __str__(self) -> str:
-        return f"UserPreferences (theme: {self.theme})"
+        return (
+            f"UserPreferences (theme: {self.theme},"
+            f" is_accessible_fontsize: {self.is_accessible_fontsize})"
+        )
 
     def update_from_dict(self, **kwargs):
         for field, value in kwargs.items():
