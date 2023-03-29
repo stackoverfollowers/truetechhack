@@ -57,7 +57,7 @@ services:
     volumes:
       - static_data:${STATIC_PATH:-/static}
 
-  worker_celery:
+  celery_worker:
     image: back
     depends_on:
       - back
