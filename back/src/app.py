@@ -8,12 +8,28 @@ from routers import auth_router, user_router, video_router
 
 settings = get_settings()
 
+tags_metadata = [
+    {
+        "name": "auth",
+        "description": "Operations with user authentication"
+    },
+    {
+        "name": "videos",
+        "description": "Operations with videos and videos related user settings"
+    },
+    {
+        "name": "user",
+        "description": "Operations with user information as well as user settings"
+    }
+]
+
 
 def create_app():
     app = FastAPI(
         title="Kion Stackoverfollowers",
         version="0.0.1",
         description="API of our solution [source code](https://github.com/stackoverfollowers/truetechhack)",
+        openapi_tags=tags_metadata
     )
 
     app.include_router(auth_router)

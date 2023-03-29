@@ -85,3 +85,7 @@ class UserPreferencesSchema(BaseModel):
 class SimpleResponseSchema(BaseModel):
     status: str
     message: str
+
+
+class HTTPExceptionSchema(BaseModel):
+    detail: str

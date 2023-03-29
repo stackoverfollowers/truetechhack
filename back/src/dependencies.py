@@ -5,6 +5,7 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
+from sqlalchemy import join
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
@@ -81,9 +82,13 @@ async def get_video(
 async def get_video_with_timings(
     video_id: int, session: AsyncSession = Depends(get_async_session)
 ) -> Video:
+    f = join(EpilepticTiming, Video, EpilepticTiming.video_id == Video.id)
+
     q = (
         select(Video)
-        .filter_by(id=video_id)
+        .select_from(f)
+        .where(Video.id == video_id)
+        .where(EpilepticTiming.author_id.is_(None))
         .options(selectinload(Video.epileptic_timings))
     )
     video = (await session.execute(q)).scalars().first()

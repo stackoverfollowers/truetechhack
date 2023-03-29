@@ -5,7 +5,7 @@ from enum import IntEnum
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Body, Depends, File, HTTPException, Request, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,14 +20,14 @@ from dependencies import (
     get_current_user,
     get_video,
     get_video_prefs,
-    get_video_with_timings,
+    get_video_with_timings
 )
 from schemas import (
     SimpleResponseSchema,
     UploadedVideoSchema,
     VideoPreferencesInSchema,
     VideoPreferencesSchema,
-    VideoTimingsSchema,
+    VideoTimingsSchema, HTTPExceptionSchema,
 )
 from tasks import preprocess_video_task
 from utils import range_requests_response
@@ -43,10 +43,17 @@ class VideoType(IntEnum):
     NOT_EPILEPTIC = Video.NOT_EPILEPTIC
 
 
-@router.get("/", response_model=Page[UploadedVideoSchema])
+@router.get(
+    "/",
+    response_model=Page[UploadedVideoSchema],
+    description=(
+            "<h3>Returns list of all videos with pagination.</h3>"
+    ),
+    status_code=200,
+)
 async def get_videos_paginator(
-    preprocessed: bool = True,
-    session: AsyncSession = Depends(get_async_session),
+        preprocessed: bool = True,
+        session: AsyncSession = Depends(get_async_session),
 ):
     return await paginate(session, select(Video).filter_by(preprocessed=preprocessed))
 
@@ -55,6 +62,11 @@ async def get_videos_paginator(
     "/",
     response_model=UploadedVideoSchema,
     dependencies=(Depends(ensure_admin),),
+    description=(
+            "<h3>Upload video on server and send it for preprocessing.<br><br>"
+            "Returns 400 if file has content type different from 'video'<br><br></h3>"
+    ),
+    responses={400: {"model": HTTPExceptionSchema}},
 )
 async def upload_video(
     file: Annotated[UploadFile, File()],
@@ -81,9 +93,17 @@ async def upload_video(
     return video
 
 
-@router.get("/{video_id}", response_model=UploadedVideoSchema)
+@router.get(
+    "/{video_id}",
+    response_model=UploadedVideoSchema,
+    description=(
+            "<h3>Returns information about video.<br><br>"
+            "Returns 404 if video was not found.</h3>"
+    ),
+    responses={404: {"model": HTTPExceptionSchema}}
+)
 async def get_video_info(video: Video = Depends(get_video)):
-    return video
+    return UploadedVideoSchema.from_orm(video)
 
 
 @router.delete(
@@ -91,6 +111,11 @@ async def get_video_info(video: Video = Depends(get_video)):
     dependencies=(Depends(ensure_admin),),
     response_model=SimpleResponseSchema,
     status_code=200,
+    description=(
+            "<h3>Deletes video from server.<br><br>"
+            "Returns 404 if video was not found</h3>"
+    ),
+    responses={404: {"model": HTTPExceptionSchema}}
 )
 async def delete_video(
     video: Video = Depends(get_video),
@@ -103,8 +128,18 @@ async def delete_video(
     return {"status": "ok", "message": "Deleted!"}
 
 
-@router.get("/{video_id}/stream")
-async def get_video(request: Request, video: Video = Depends(get_video)):
+@router.get(
+    "/{video_id}/stream",
+    description=(
+            "<h3>Returns stream of video.<br><br>"
+            "Returns 404 if video was not found</h3>"
+    ),
+    status_code=206,
+    response_description="Successful bytes response",
+    response_class=Response,
+    responses={404: {"model": HTTPExceptionSchema}}
+)
+async def get_video_stream(request: Request, video: Video = Depends(get_video)):
     return range_requests_response(
         request,
         file_path=video.path,
@@ -112,15 +147,25 @@ async def get_video(request: Request, video: Video = Depends(get_video)):
     )
 
 
-@router.get("/{video_id}/preferences", response_model=VideoPreferencesSchema)
+@router.get(
+    "/{video_id}/preferences",
+    response_model=VideoPreferencesSchema,
+    description=(
+            "<h3>Returns user's settings for video.<br><br>"
+            "Returns 404 if video was not found</h3>"
+    ),
+    responses={404: {"model": HTTPExceptionSchema}}
+)
 async def get_video_preferences(
     video_preferences: VideoPreferences = Depends(get_video_prefs),
 ):
-    return video_preferences
+    return VideoPreferencesSchema.from_orm(video_preferences)
 
 
 @router.put(
-    "/{video_id}/preferences", response_model=VideoPreferencesSchema, status_code=200
+    "/{video_id}/preferences",
+    response_model=VideoPreferencesSchema,
+    description="<h2>Edit user's preferences for video.</h2>",
 )
 async def put_video_preferences(
     form_data: VideoPreferencesInSchema,
@@ -130,7 +175,7 @@ async def put_video_preferences(
     current_prefs.update_from_dict(**form_data.dict())
     session.add(current_prefs)
     await session.commit()
-    return current_prefs
+    return VideoPreferencesSchema.from_orm(current_prefs)
 
 
 @router.post(
@@ -138,7 +183,7 @@ async def put_video_preferences(
     response_model=SimpleResponseSchema,
     status_code=201,
     name="Send epileptic feedback",
-    description="Takes user's epileptic time codes for videos.",
+    description="<h3>Takes user's epileptic time codes for videos.</h3>",
 )
 async def post_epileptic_feedback(
     start: int = Body(gt=0),
@@ -161,6 +206,15 @@ async def post_epileptic_feedback(
     return {"status": "ok", "message": "Created!"}
 
 
-@router.get("/{video_id}/timings", response_model=VideoTimingsSchema)
+@router.get(
+    "/{video_id}/timings",
+    response_model=VideoTimingsSchema,
+    description=(
+            "<h3>Returns epileptic moments' timings for video.</h3><br>"
+            "<h3>Returns 404 if video was not found.</h3>"
+    ),
+    responses={404: {"model": HTTPExceptionSchema}, },
+    status_code=200
+)
 async def get_video_timings(video: Video = Depends(get_video_with_timings)):
     return video
