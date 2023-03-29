@@ -100,8 +100,8 @@ const playerSlice = createSlice({
 		setSeeking: (state, action: PayloadAction<boolean>) => {
 			state.seeking = action.payload;
 		},
-		setPlaybackRate: (state, action: PayloadAction<string>) => {
-			state.playbackRate = parseFloat(action.payload);
+		setPlaybackRate: (state, action: PayloadAction<number>) => {
+			state.playbackRate = action.payload;
 		},
 		setDuration: (state, action: PayloadAction<number>) => {
 			state.duration = action.payload;

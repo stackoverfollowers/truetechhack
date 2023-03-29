@@ -86,7 +86,7 @@ const VideoList = () => {
 					<FiChevronLeft className="h-5 w-5" />
 				</Button>
 				<Button
-					disabled={data || page === data?.pages}
+					disabled={Boolean(data) || page === data?.pages}
 					onClick={() => setPage(page + 1)}
 					variant="secondary"
 				>

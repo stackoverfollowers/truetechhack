@@ -21,6 +21,7 @@ import { EpilepticTimingsResponse } from '@/redux/services/stream';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import InfoButton from './player-ui/InfoButton';
 import FeedbackButton from './player-ui/FeedbackButton';
+import PlaybackRateButton from './player-ui/PlaybackRateButton';
 
 interface VideoPlayerProps {
 	playerRef: any;
@@ -128,6 +129,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 					{/* Right controls */}
 					<div className="flex items-center">
 						{/* Epileptic timings info */}
+						<PlaybackRateButton />
 						<InfoButton />
 						<FeedbackButton />
 						<Filters />
