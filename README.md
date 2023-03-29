@@ -12,6 +12,7 @@ cp .env.example .env
 docker-compose -f docker-compose.dev.yaml up --build -d
 ```
 
+
 ### Production run
 
 ```bash
