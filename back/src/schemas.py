@@ -1,9 +1,9 @@
-import datetime
+from typing import Literal
 
-from pydantic import BaseModel, SecretStr
-
+from pydantic import BaseModel, SecretStr, validator
 from schemas_mixins import PydanticTimestampMixin
-from utils import SiteTheme
+
+from db.models import UserPreferences
 
 
 class UserInSchema(BaseModel):
@@ -71,8 +71,15 @@ class VideoPreferencesSchema(VideoPreferencesInSchema):
 class UserPreferencesSchema(BaseModel):
     user_id: int
 
-    theme: SiteTheme
+    theme: Literal[UserPreferences.THEME_VALUES]
+    _extract_theme = validator("theme", pre=True, allow_reuse=True)(
+        lambda x: str(x.code) if not isinstance(x, str) else x
+    )
 
     class Config:
         orm_mode = True
-        use_enum_values = True
+
+
+class SimpleResponseSchema(BaseModel):
+    status: str
+    message: str

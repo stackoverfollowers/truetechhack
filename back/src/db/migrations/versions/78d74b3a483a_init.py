@@ -1,18 +1,18 @@
-"""Init migration
+"""Init
 
-Revision ID: 3d363d89bdec
+Revision ID: 78d74b3a483a
 Revises: 
-Create Date: 2023-03-28 08:57:03.026293
+Create Date: 2023-03-28 22:53:51.151817
 
 """
 import sqlalchemy as sa
 import sqlalchemy_utils
 from alembic import op
 
-from utils import SiteTheme, VideoType
+from db.models import UserPreferences, Video
 
 # revision identifiers, used by Alembic.
-revision = "3d363d89bdec"
+revision = "78d74b3a483a"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -39,7 +39,11 @@ def upgrade() -> None:
         "user_preferences",
         sa.Column("user_id", sa.BigInteger(), nullable=False),
         sa.Column(
-            "theme", sqlalchemy_utils.types.choice.ChoiceType(SiteTheme), nullable=True
+            "theme",
+            sqlalchemy_utils.types.choice.ChoiceType(
+                UserPreferences.THEME_CHOICES, impl=sa.String()
+            ),
+            nullable=True,
         ),
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column(
@@ -67,7 +71,11 @@ def upgrade() -> None:
         sa.Column("path", sa.String(length=255), nullable=False),
         sa.Column("preprocessed", sa.Boolean(), nullable=False),
         sa.Column(
-            "type", sqlalchemy_utils.types.choice.ChoiceType(VideoType), nullable=True
+            "type",
+            sqlalchemy_utils.types.choice.ChoiceType(
+                Video.TYPE_CHOICES, impl=sa.Integer()
+            ),
+            nullable=True,
         ),
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column(
@@ -92,12 +100,12 @@ def upgrade() -> None:
         sa.Column("author_id", sa.BigInteger(), nullable=True),
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["video_id"],
-            ["video.id"],
-        ),
-        sa.ForeignKeyConstraint(
             ["author_id"],
             ["user.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["video_id"],
+            ["video.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -151,13 +159,7 @@ def upgrade() -> None:
     )
     op.create_table(
         "celery_taskmeta",
-        sa.Column(
-            "id",
-            sa.Integer(),
-            sa.Sequence("task_id_sequence"),
-            autoincrement=True,
-            nullable=False,
-        ),
+        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("task_id", sa.String(length=155), nullable=True),
         sa.Column("status", sa.String(length=50), nullable=True),
         sa.Column("result", sa.PickleType(), nullable=True),
@@ -173,18 +175,9 @@ def upgrade() -> None:
         sa.UniqueConstraint("task_id"),
         sqlite_autoincrement=True,
     )
-    op.execute(
-        sa.schema.CreateSequence(sa.Sequence("task_id_sequence"), if_not_exists=True)
-    )
     op.create_table(
         "celery_tasksetmeta",
-        sa.Column(
-            "id",
-            sa.Integer(),
-            sa.Sequence("taskset_id_sequence"),
-            autoincrement=True,
-            nullable=False,
-        ),
+        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("taskset_id", sa.String(length=155), nullable=True),
         sa.Column("result", sa.PickleType(), nullable=True),
         sa.Column("date_done", sa.DateTime(), nullable=True),
@@ -194,6 +187,9 @@ def upgrade() -> None:
     )
     op.execute(
         sa.schema.CreateSequence(sa.Sequence("taskset_id_sequence"), if_not_exists=True)
+    )
+    op.execute(
+        sa.schema.CreateSequence(sa.Sequence("task_id_sequence"), if_not_exists=True)
     )
     # ### end Alembic commands ###
 

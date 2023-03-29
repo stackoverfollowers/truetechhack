@@ -15,6 +15,6 @@ celery.config_from_object(
         "beat_dburi": settings.CELERY_DBURI,
         "include": ["tasks"],
         "worker_max_tasks_per_child": 100,
-        "task_default_queue": 'preprocess_video',
+        "task_default_queue": "preprocess_video",
     }
 )

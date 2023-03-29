@@ -5,7 +5,6 @@ from sqlalchemy_utils import ChoiceType
 
 from db.base import Base
 from db.mixins import TimestampMixin
-from utils import SiteTheme, VideoType
 
 
 class User(Base, TimestampMixin):
@@ -22,16 +21,24 @@ class User(Base, TimestampMixin):
 
 
 class Video(Base, TimestampMixin):
+    DEFAULT = 0
+    EPILEPTIC = 1
+    NOT_EPILEPTIC = 2
+    TYPE_VALUES = [DEFAULT, EPILEPTIC, NOT_EPILEPTIC]
+    TYPE_CHOICES = [
+        (DEFAULT, DEFAULT),
+        (EPILEPTIC, EPILEPTIC),
+        (NOT_EPILEPTIC, NOT_EPILEPTIC),
+    ]
+
     author_id = Column(ForeignKey("user.id"), index=True, nullable=False)
     filename = Column(String(length=255), nullable=False)
     path = Column(String(length=255), nullable=False)
     preprocessed = Column(Boolean, default=False, nullable=False)
-    type = Column(ChoiceType(VideoType, impl=String()), default=VideoType.default.value)
+    type = Column(ChoiceType(TYPE_CHOICES, impl=Integer()), default=DEFAULT)
 
     author = relationship("User", back_populates="uploaded_videos")
-
     epileptic_timings = relationship("EpilepticTiming")
-
     video_preferences = relationship("VideoPreferences")
 
     def __str__(self) -> str:
@@ -62,10 +69,24 @@ class VideoPreferences(Base, TimestampMixin):
 
 
 class UserPreferences(Base, TimestampMixin):
+    DEFAULT = "default"
+    PROT = "prot"
+    DEUT = "deut"
+    TRIT = "trit"
+
+    THEME_VALUES = (DEFAULT, PROT, DEUT, TRIT)
+
+    THEME_CHOICES = [
+        (DEFAULT, DEFAULT),
+        (PROT, PROT),
+        (DEUT, DEUT),
+        (TRIT, TRIT),
+    ]
+
     user_id = Column(
         ForeignKey("user.id", ondelete="CASCADE"), index=True, nullable=False
     )
-    theme = Column(ChoiceType(SiteTheme, impl=String()), default="default")
+    theme = Column(ChoiceType(THEME_CHOICES, impl=String()), default="default")
 
     user = relationship("User", back_populates="user_preference", uselist=False)
 

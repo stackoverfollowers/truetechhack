@@ -17,7 +17,7 @@ from utils import (
 router = APIRouter(tags=["auth"], prefix="/auth")
 
 
-@router.post("/signup", response_model=UserSchema)
+@router.post("/signup", response_model=UserSchema, status_code=201)
 async def create_user(
     data: UserInSchema, session: AsyncSession = Depends(get_async_session)
 ):
@@ -33,12 +33,11 @@ async def create_user(
         username=data.username,
         password=get_hashed_password(data.password.get_secret_value()),
     )
-    print(data.password.get_secret_value())
     session.add(user)
     session.add(UserPreferences(user=user))
     await session.commit()
     await session.refresh(user)
-    return UserSchema.from_orm(user)
+    return user
 
 
 @router.post("/login", response_model=Token)

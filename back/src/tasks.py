@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
     bind=True,
     name="preprocess_video",
     track_started=True,
-    autoretry_for=(Exception,),
-    retry_kwargs={"max_retries": 7, "countdown": 5},
+    # autoretry_for=(Exception,),
+    # retry_kwargs={"max_retries": 7, "countdown": 5},
 )
 def preprocess_video_task(self, video_id: int) -> None:
     with get_session() as session:
         video = session.query(Video).get(video_id)
-        timings = calculate_gray_timings(video_filename=video.path)
+        timings = calculate_gray_timings(video=video, session=session)
         for start, end in timings:
             video.epileptic_timings.append(
                 EpilepticTiming(start_time=start, end_time=end)
