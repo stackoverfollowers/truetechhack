@@ -24,6 +24,7 @@ oauth = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
 async def get_current_user(
     token: str = Depends(oauth), session: AsyncSession = Depends(get_async_session)
 ) -> User:
+    """Validate user's token and return his DB obj"""
     try:
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
@@ -59,6 +60,7 @@ async def get_user_preferences(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ) -> UserPreferences:
+    """Return user's preferences from DB or create a new one"""
     q = select(UserPreferences).filter_by(user=user)
     prefs = (await session.execute(q)).scalars().first()
     if prefs is not None:

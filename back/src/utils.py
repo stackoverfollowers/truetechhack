@@ -23,6 +23,8 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(username: str) -> str:
+    """Returns JWT string for given username with short life ACCESS expiration"""
+
     expires_delta = datetime.utcnow() + timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
@@ -31,6 +33,8 @@ def create_access_token(username: str) -> str:
 
 
 def create_refresh_token(username: str) -> str:
+    """Returns JWT string for given username with long life REFRESH expiration"""
+
     expires_delta = datetime.utcnow() + timedelta(
         minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
     )
