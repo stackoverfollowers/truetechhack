@@ -53,7 +53,7 @@ services:
       - ./back/src/:/src
       - static_data:${STATIC_PATH:-/static}
 
-  celery_worker_preprocess_video:
+  celery_worker:
     image: back
     depends_on:
       - back

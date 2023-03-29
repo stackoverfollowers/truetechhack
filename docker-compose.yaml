@@ -81,7 +81,6 @@ services:
     volumes:
       - static_data:${STATIC_PATH:-/static}
 
-
   front:
     depends_on:
       - back
