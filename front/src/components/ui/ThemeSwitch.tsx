@@ -81,7 +81,7 @@ const ThemeSwitch = () => {
 		<Listbox value={selected} onChange={handleThemeChange}>
 			{({ open }) => (
 				<>
-					<div className={`${fs.sm} relative z-50`}>
+					<div style={fs.sm} className="relative z-50">
 						<Listbox.Button
 							as="div"
 							className="relative appearance-none border focus:outline-none border-accents-8 bg-accents-10 cursor-pointer hover:bg-accents-9 text-accents-3 rounded-md py-[5px] px-[5px]"
@@ -96,10 +96,11 @@ const ThemeSwitch = () => {
 							leaveFrom="opacity-100"
 							leaveTo="opacity-0"
 						>
-							<Listbox.Options className="absolute right-0 min-w-[164px] p-1 border border-accents-8 bg-accents-10 text-accents-3 z-10 mt-2 max-h-56 w-full overflow-auto rounded-md py-1 focus:outline-none">
+							<Listbox.Options className="absolute right-0 min-w-[164px] p-1 border border-accents-8 bg-accents-10 text-accents-3 z-10 mt-2 max-h-56 w-fit overflow-auto rounded-md py-1 focus:outline-none">
 								{THEMES.map(theme => (
 									<Listbox.Option
 										key={theme.value}
+										style={fs.sm}
 										className={({ active, selected }) =>
 											cx(
 												'relative flex items-center px-3 py-[5px] cursor-default select-none rounded-md',

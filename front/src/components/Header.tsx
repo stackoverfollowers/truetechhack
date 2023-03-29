@@ -50,7 +50,8 @@ const Header = () => {
 						<Link
 							href={href}
 							key={i}
-							className={`${fs.base} font-semibold relative block transition hover:text-primary`}
+							style={fs.base}
+							className="font-semibold relative block transition hover:text-primary"
 						>
 							{label}
 						</Link>
@@ -71,7 +72,7 @@ const Header = () => {
 				onClose={setMobileMenuOpen}
 			>
 				<div className="fixed inset-0 z-10" />
-				<Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full bg-accents-10 overflow-y-auto  p-4 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+				<Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full bg-accents-10 overflow-y-auto p-4">
 					<div className="flex items-center justify-between">
 						<Image width={32} height={32} alt="Logo" src="logo.svg" />
 						<button type="button" onClick={() => setMobileMenuOpen(false)}>
@@ -79,8 +80,8 @@ const Header = () => {
 							<FiX className="h-6 w-6 text-accents-2" aria-hidden="true" />
 						</button>
 					</div>
-					<div className="mt-6 ">
-						<div className={`${fs.base} space-y-2`}>
+					<div className="mt-6">
+						<div style={fs.base} className={`grid grid-cols-2 gap-2`}>
 							{navigation.map(({ label, href }, i) => (
 								<a
 									href={href}
@@ -94,12 +95,13 @@ const Header = () => {
 					</div>
 					<div className="my-4 border-t border-accents-8" />
 					<div className="flex items-center justify-between w-fit gap-x-8">
-						<span className={`${fs.base} font-semibold leading-7`}>
+						<span style={fs.base} className="font-semibold leading-7">
 							Настройка темы
 						</span>
 						<ThemeSwitch />
+						<FontsizeSwitch />
 					</div>
-					<div className="mt-4 mb-8 border-t border-accents-8" />
+					<div className="my-4 border-t border-accents-8" />
 					<div className="flex w-full">
 						<LoginButton className="w-full" />
 					</div>

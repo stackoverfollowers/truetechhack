@@ -21,7 +21,10 @@ const DurationDisplay = () => {
 
 	return (
 		<>
-			<span className={`${fs.sm} flex items-center font-mono tracking-tighter`}>
+			<span
+				style={fs.sm}
+				className="flex items-center font-mono tracking-tighter"
+			>
 				<span>{format(duration * progress.played)}</span>
 				<span className="px-[2px]">/</span>
 				<span>{format(duration)}</span>

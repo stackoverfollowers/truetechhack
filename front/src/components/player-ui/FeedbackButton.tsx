@@ -50,9 +50,10 @@ const FeedbackButton = () => {
 											className="h-4 w-4 shrink-0 mr-2"
 										/>
 										<div
-											className={`${fs.sm} flex justify-between w-full mr-1 font-medium`}
+											style={fs.sm}
+											className="flex justify-between w-full mr-1 font-medium"
 										>
-											Сообщите об опасных кадрах
+											Сообщить об опасных кадрах
 										</div>
 									</div>
 									<form

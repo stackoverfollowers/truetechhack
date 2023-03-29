@@ -38,13 +38,15 @@ const Profile = () => {
 	return (
 		<div className="w-full max-w-7xl flex flex-col gap-y-8">
 			<div className="bg-accents-10 rounded-md p-4">
-				<h2 className={`${fs.base} font-semibold leading-7`}>Профиль</h2>
-				<p className={`${fs.sm} mt-1  leading-6 text-accents-6`}>
+				<h2 style={fs.base} className="font-semibold leading-7">
+					Профиль
+				</h2>
+				<p style={fs.sm} className="mt-1 leading-6 text-accents-6">
 					Общие настройки
 				</p>
 
 				<div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-					<div className={`${fs.sm} sm:col-span-4`}>
+					<div style={fs.sm} className="sm:col-span-4">
 						<label htmlFor="username" className="block font-medium leading-6">
 							Имя пользователя
 						</label>
@@ -63,16 +65,18 @@ const Profile = () => {
 			</div>
 			<form className="bg-accents-10 rounded-md p-4" onSubmit={handleUpload}>
 				<div className="border-b border-accents-8 pb-4">
-					<h2 className={`${fs.base} font-semibold leading-7`}>Видео</h2>
-					<p className={`${fs.sm} mt-1  leading-6 text-accents-6`}>
+					<h2 style={fs.base} className="font-semibold leading-7">
+						Видео
+					</h2>
+					<p style={fs.sm} className="mt-1 leading-6 text-accents-6">
 						Загруженное видео предварительно пройдент обработку на бэкенде для
 						выявления <b>потенциально эпилептических кадров</b>, после чего
 						появится в списке видео под плеером. Обработка больших файлов
 						занимает больше времени.
 					</p>
-					<div className={`${fs.sm} col-span-full mt-8`}>
+					<div style={fs.sm} className="col-span-full mt-8">
 						<div className="mt-2">
-							<div className="flex w-fit rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+							<div className="flex">
 								<input
 									id="fileInput"
 									ref={fileInputRef}
@@ -83,23 +87,25 @@ const Profile = () => {
 									placeholder="username"
 								/>
 								{!file ? (
-									<button
-										className="px-3 py-[5px]"
+									<Button
+										variant="secondary"
 										onClick={() => fileInputRef.current.click()}
 									>
 										Загрузить
-									</button>
+									</Button>
 								) : (
-									<div className="flex items-center px-3 gap-x-3">
-										<div className="text-primary/80">{file && file.name}</div>
+									<div className="flex items-center gap-x-3">
+										<div className="text-primary/80 w-fit rounded-md border border-accents-8 focus-within:border focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 px-3 py-[5px]">
+											{file && file.name}
+										</div>
 
-										<button
-											className="py-[5px]"
+										<Button
+											variant="secondary"
 											onClick={() => setFile(null)}
 											disabled={isUploading}
 										>
 											Удалить
-										</button>
+										</Button>
 									</div>
 								)}
 							</div>

@@ -15,7 +15,7 @@ const LoginButton = ({ className }: LoginButtonProps) => {
 	}
 	return (
 		<>
-			<Button Component={Link} className={className} href="/login">
+			<Button Component="a" className={className} href="/login">
 				Войти
 			</Button>
 		</>

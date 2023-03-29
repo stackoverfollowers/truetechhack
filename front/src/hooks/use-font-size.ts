@@ -7,15 +7,15 @@ const useFontSize = () => {
 		switch (accessibleFs) {
 			case true:
 				return {
-					xs: 'text-xs',
-					sm: 'text-sm',
-					base: 'text-base',
+					xs: { fontSize: '12px' },
+					sm: { fontSize: '14px' },
+					base: { fontSize: '16px' },
 				};
 			case false:
 				return {
-					xs: 'text-base',
-					sm: 'text-lg',
-					base: 'text-xl',
+					xs: { fontSize: '16px' },
+					sm: { fontSize: '20px' },
+					base: { fontSize: '24px' },
 				};
 		}
 	};

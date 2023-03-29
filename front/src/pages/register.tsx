@@ -88,9 +88,13 @@ const SignUp = () => {
 								</div>
 							</div>
 						</div>
-						{error && <span className={`${fs.sm} text-error`}>{error}</span>}
+						{error && (
+							<span style={fs.sm} className="text-error">
+								{error}
+							</span>
+						)}
 
-						<div className={`${fs.sm} flex items-center justify-between`}>
+						<div style={fs.sm} className="flex items-center justify-between">
 							<span>Уже есть аккаунт?</span>
 							<Link
 								href="/login"

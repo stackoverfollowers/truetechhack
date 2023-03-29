@@ -108,7 +108,8 @@ const Filters = () => {
 												</div>
 												<div className="flex justify-between w-full mr-1">
 													<label
-														className={`${fs.sm} font-medium text-accents-3`}
+														style={fs.sm}
+														className="font-medium text-accents-3"
 													>
 														{label}
 													</label>
