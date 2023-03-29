@@ -20,7 +20,7 @@ cp .env.example .env
 docker-compose up --build -d
 ```
 
-
+[![CI](https://github.com/stackoverfollowers/truetechhack/actions/workflows/main.yaml/badge.svg)](https://github.com/stackoverfollowers/truetechhack/actions/workflows/main.yaml)
 
 ## Front
 
