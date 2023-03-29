@@ -86,7 +86,7 @@ const playerSlice = createSlice({
 		},
 		resetPlayer: () => initialState,
 		setUrl: (state, action: PayloadAction<number>) => {
-			let newUrl = `${process.env.SERVER_URL}/videos/${action.payload}/stream`;
+			let newUrl = `http://${process.env.NEXT_PUBLIC_SERVER_URL}/api/videos/${action.payload}/stream`;
 			if (newUrl === state.url) {
 				return;
 			}

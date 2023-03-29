@@ -31,7 +31,7 @@ class Video(Base, TimestampMixin):
         (NOT_EPILEPTIC, NOT_EPILEPTIC),
     ]
 
-    author_id = Column(ForeignKey("user.id"), index=True, nullable=False)
+    author_id = Column(ForeignKey("user.id", ondelete="CASCADE"), index=True, nullable=False)
     filename = Column(String(length=255), nullable=False)
     path = Column(String(length=255), nullable=False)
     preprocessed = Column(Boolean, default=False, nullable=False)
@@ -49,8 +49,8 @@ class Video(Base, TimestampMixin):
 
 
 class VideoPreferences(Base, TimestampMixin):
-    user_id = Column(ForeignKey("user.id"), index=True, nullable=False)
-    video_id = Column(ForeignKey("video.id"), index=True, nullable=False)
+    user_id = Column(ForeignKey("user.id", ondelete="CASCADE"), index=True, nullable=False)
+    video_id = Column(ForeignKey("video.id", ondelete="CASCADE"), index=True, nullable=False)
 
     brightness = Column(SMALLINT, default=100, nullable=False)
     contrast = Column(SMALLINT, default=100, nullable=False)
@@ -105,7 +105,7 @@ class UserPreferences(Base, TimestampMixin):
 
 
 class EpilepticTiming(Base):
-    video_id = Column(ForeignKey("video.id"), index=True, nullable=False)
+    video_id = Column(ForeignKey("video.id", ondelete="CASCADE"), index=True, nullable=False)
 
     start_time = Column(Integer, nullable=False)
     end_time = Column(Integer, nullable=False)

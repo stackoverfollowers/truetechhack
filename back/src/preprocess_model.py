@@ -7,10 +7,8 @@ import cv2
 import numpy as np
 import redis
 import skvideo.io
-from sklearn.decomposition import PCA
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
 from sqlalchemy.orm import Session
 
 from constants import get_settings
@@ -18,54 +16,46 @@ from db.models import Video
 
 logger = logging.getLogger("celery")
 
-SVC_MODEL_KEY = "BEST_SVC_MODEL_EVER"
+LR_MODEL_KEY = "BEST_SVC_MODEL_EVER"
+LIMITER = 5
 
 settings = get_settings()
 
 
 def calculate_gray_timings(video: Video, session: Session) -> list[tuple[int, int]]:
-    gray_frames = get_gray_frames_from_videos([video])
+    """Calculate timings for new video"""
+    arr = np.array(get_comparing(get_gray_frames_from_videos([video]))).reshape(-1,1)
+    lr = get_lr_model(session)
+    answer = lr.predict(arr)
 
-    X = np.array(gray_frames).reshape(len(gray_frames), -1)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    pca = PCA(n_components=100)
-    X_pca = pca.fit_transform(X_scaled)
-
-    svm = get_svc_model(session)
-    y_pred = svm.predict(X_pca)
-
-    frame_rate = eval(skvideo.io.ffprobe(video.path)["video"]["@r_frame_rate"])
-    frame_interval = 1.0 / float(frame_rate)
+    fps = int(eval(skvideo.io.ffprobe(video.path)["video"]["@r_frame_rate"]))
 
     timings = []
-    start, end = None, None
-    for i in range(len(X_pca)):
-        if y_pred[i] == 1:
-            ts = i * frame_interval
+    start = None
+    for i in range(0,len(answer),fps):
+        e_frames = sum(answer[i:i+fps])
+        ts = i // fps
+        if e_frames >= LIMITER:
             if start is None:
-                start = ceil(ts)
-                end = start
-            else:
-                end = ceil(ts)
-                if ts - end >= 2:
-                    timings.append((start, end))
-                    start = None
-                    end = None
-
+                start = ts
+        else:
+            if start is not None:
+                timings.append([start, ts])
+                start = None
     if start is not None:
-        end = end or start
-        timings.append((start, end))
+        timings.append([start, start])
     return timings
 
 
-def get_svc_model(session: Session) -> SVC:
+def get_lr_model(session: Session) -> LogisticRegression:
+    """Return model of logistic regression"""
     r = redis.Redis.from_url(settings.REDIS_URI)
-    model = r.get(SVC_MODEL_KEY)
+    model = r.get(LR_MODEL_KEY)
     if model is None:
         logger.info("Model not found!")
-        model = create_svc_model(session=session)
-        r.set(SVC_MODEL_KEY, pickle.dumps(model, protocol=pickle.HIGHEST_PROTOCOL))
+        model = create_lr_model(session=session)
+        logger.info('Model fitted!')
+        r.set(LR_MODEL_KEY, pickle.dumps(model, protocol=pickle.HIGHEST_PROTOCOL))
     else:
         model = pickle.loads(model)
     return model
@@ -75,7 +65,7 @@ def nextFrame(self):
     try:
         for i in range(self.inputframenum - 1):
             yield self._readFrame()
-    except:
+    except RuntimeError:
         pass
 
 
@@ -92,7 +82,8 @@ def get_gray_frames_from_videos(videos: list[Video]) -> list:
     return gray_frames
 
 
-def create_svc_model(session: Session) -> SVC:
+def create_lr_model(session: Session) -> LogisticRegression:
+    """Fitted new model from spec videos"""
     logger.info("Start fit model...")
     epileptic_videos = (
         session.query(Video)
@@ -100,27 +91,28 @@ def create_svc_model(session: Session) -> SVC:
         .filter_by(type=Video.EPILEPTIC)
         .all()
     )
-    gray_frames = get_gray_frames_from_videos(epileptic_videos)
+    frames = get_comparing(get_gray_frames_from_videos(epileptic_videos))
     not_epileptic_videos = (
         session.query(Video)
         .with_entities(Video.path)
         .filter_by(type=Video.NOT_EPILEPTIC)
         .all()
     )
-    total_epileptic_frames = len(gray_frames)
-    gray_frames += get_gray_frames_from_videos(not_epileptic_videos)
+    e_frames_length = len(frames)
+    frames += get_comparing(get_gray_frames_from_videos(not_epileptic_videos))
     logger.info("Preprocessed gray frames!")
-    X = np.array(gray_frames).reshape(len(gray_frames), -1)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    pca = PCA(n_components=100)
-    X_pca = pca.fit_transform(X_scaled)
-    y = np.zeros(len(gray_frames))
-    seizure_start = 0
-    seizure_end = total_epileptic_frames
-    y[seizure_start:seizure_end] = 1
-    X_train, _, y_train, _ = train_test_split(X_pca, y, test_size=0.2, random_state=42)
-    svm = SVC(kernel="linear", random_state=42)
-    svm.fit(X_train, y_train)
-    logger.info("Model fitted!")
-    return svm
+    y = np.zeros(len(frames))
+    y[:e_frames_length] = 1
+    df = pd.DataFrame({'x': frames, 'y': y})
+    df = df[df['x'] < 0.8]
+    return LogisticRegression(random_state=0).fit(np.array(df['x']).reshape(-1,1), df['y'])
+
+
+def get_comparing(frames: list) -> np.array:
+    comparing = []
+    for i in range(len(frames)-1):
+        hist1 = cv2.calcHist(frames[i],[0], None, [256], [0,256])
+        hist2 = cv2.calcHist(frames[i+1],[0], None, [256], [0,256])
+        comparing.append(cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL))
+    return comparing
+

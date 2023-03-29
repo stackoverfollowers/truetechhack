@@ -68,8 +68,8 @@ const VideoList = () => {
 	console.log('epileptic', epileptic);
 
 	return (
-		<div className="flex flex-col gap-y-4">
-			<div className="flex justify-between">
+		<div className="flex flex-col gap-y-4 px-2 sm:px-0">
+			<div className="flex justify-between flex-col sm:flex-row">
 				<div style={fs.sm} className="uppercase font-semibold mb-2">
 					Список доступных видео
 				</div>

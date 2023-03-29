@@ -89,6 +89,7 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["author_id"],
             ["user.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -104,10 +105,12 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["author_id"],
             ["user.id"],
+            ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
             ["video_id"],
             ["video.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -137,10 +140,12 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["user.id"],
+            ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
             ["video_id"],
             ["video.id"],
+            ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id"),
     )

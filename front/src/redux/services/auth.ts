@@ -21,13 +21,13 @@ export const authApi = createApi({
 				const data = new URLSearchParams();
 				data.append('username', username);
 				data.append('password', password);
-
 				return {
 					url: '/auth/login',
 					method: 'POST',
 					body: data,
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
+						'Access-Control-Allow-Credentials': 'true',
 					},
 				};
 			},
@@ -40,6 +40,7 @@ export const authApi = createApi({
 					body: data,
 					headers: {
 						'Content-Type': 'application/json',
+						'Access-Control-Allow-Credentials': 'true'
 					},
 				};
 			},

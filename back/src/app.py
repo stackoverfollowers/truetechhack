@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import APIRouter, FastAPI, status
 from fastapi_pagination import add_pagination
 from handlers import http_exception_handler
 from starlette.middleware.cors import CORSMiddleware
@@ -14,12 +14,14 @@ def create_app():
         title="Kion Stackoverfollowers",
         version="0.0.1",
         description="API of our solution [source code](https://github.com/stackoverfollowers/truetechhack)",
+        docs_url="/api/docs",
+        openapi_url="/api/openapi.json",
     )
-
-    app.include_router(auth_router)
-    app.include_router(video_router)
-    app.include_router(user_router)
-
+    api = APIRouter(prefix='/api')
+    api.include_router(auth_router)
+    api.include_router(video_router)
+    api.include_router(user_router)
+    app.include_router(api)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],

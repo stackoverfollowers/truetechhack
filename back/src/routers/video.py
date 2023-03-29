@@ -54,7 +54,6 @@ async def get_videos_paginator(
 @router.post(
     "/",
     response_model=UploadedVideoSchema,
-    dependencies=(Depends(ensure_admin),),
 )
 async def upload_video(
     file: Annotated[UploadFile, File()],

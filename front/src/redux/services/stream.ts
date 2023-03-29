@@ -49,7 +49,7 @@ export const streamApi = createApi({
 					: [{ type: 'Videos', id: 'VIDEO-LIST' }],
 		}),
 		getVideoTimings: build.query<EpilepticTimingsResponse, number>({
-			query: id => `videos/${id}/timings`,
+			query: id => `api/videos/${id}/timings`,
 		}),
 		uploadVideo: build.mutation<any, File>({
 			query: data => {

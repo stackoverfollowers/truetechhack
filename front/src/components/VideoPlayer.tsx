@@ -62,7 +62,7 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(
-				`${process.env.SERVER_URL}/videos/${videoId}/timings`
+				`api/videos/${videoId}/timings`
 			);
 			const data: EpilepticTimingsResponse = await response.json();
 
@@ -98,8 +98,8 @@ const VideoPlayer = ({ playerRef }: VideoPlayerProps) => {
 				const shouldPulse =
 					isBadFrame ||
 					(rest.progress.playedSeconds >
-						epilepticTimings[0].start_time - offsetTime &&
-						rest.progress.playedSeconds < epilepticTimings[0].start_time);
+						epilepticTimings[0]?.start_time - offsetTime &&
+						rest.progress.playedSeconds < epilepticTimings[0]?.start_time);
 				setShowOverlay(isBadFrame);
 				dispatch(setPulse(shouldPulse));
 			}

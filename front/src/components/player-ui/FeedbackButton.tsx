@@ -67,7 +67,7 @@ const FeedbackButton = () => {
 												placeholder="00:00:00"
 												step="2"
 												value={startTime}
-												className="w-[100px]"
+												className="!w-[100px]"
 												onChange={e => setStartTime(e.target.value)}
 											/>
 											<span className="mx-2">по</span>
@@ -76,7 +76,7 @@ const FeedbackButton = () => {
 												placeholder="00:00:00"
 												step="2"
 												value={endTime}
-												className="w-[100px]"
+												className="!w-[100px]"
 												onChange={e => setEndTime(e.target.value)}
 											/>
 										</div>

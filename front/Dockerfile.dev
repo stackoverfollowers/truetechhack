@@ -3,7 +3,7 @@ FROM node:18-alpine
 WORKDIR /usr/src/app/client
 
 COPY ./src .
-
+RUN echo NEXT_PUBLIC_SERVER_URL=localhost > .env.production
 RUN yarn global add pnpm && pnpm i
 
 CMD ["pnpm", "dev"]

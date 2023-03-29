@@ -1,5 +1,9 @@
 # truetechhack
 
+DEMO: [http://91.185.84.129/](http://91.185.84.129/)
+
+Stack: Python 3.10, FastAPI, Next.js, Nginx, PostgreSQL, Redis, Celery SkLearn
+
 ## Run project
 
 ### Dev run
@@ -20,18 +24,38 @@ cp .env.example .env
 docker-compose up --build -d
 ```
 
-[![CI](https://github.com/stackoverfollowers/truetechhack/actions/workflows/main.yaml/badge.svg)](https://github.com/stackoverfollowers/truetechhack/actions/workflows/main.yaml)
+### Migrations
 
-## Front
+Using alembic for automate create migrations
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-### Getting Started
-
-First, run the development server:
-
-```bash
-pnpm dev
+```shell
+alembic revision --autogenerate -m "Name of migration"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```shell
+docker-compose exec backend alembic revision --autogenerate -m "Name of migration"
+```
+
+For apply 
+
+```shell
+alembic upgrade head
+```
+
+or 
+
+```shell
+docker-compose exec backend alembic upgrade head
+```
+
+### Scrinshots
+
+![1](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/1.jpg)
+![2](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/2.jpg)
+![3](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/3.jpg)
+![4](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/4.jpg)
+![5](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/5.jpg)
+![6](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/6.jpg)
+![7](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/7.jpg)
+![8](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/8.jpg)
+![91](https://github.com/stackoverfollowers/truetechhack/raw/main/docs/9.jpg)

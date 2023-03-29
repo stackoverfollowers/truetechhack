@@ -36,7 +36,7 @@ const SignIn = () => {
 
 			dispatch(setCredentials(user as any));
 			const response = await fetch(
-				`${process.env.SERVER_URL}/users/preferences`,
+				`http://${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/preferences`,
 				{
 					headers: { Authorization: `Bearer ${user.access_token}` },
 				}

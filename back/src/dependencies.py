@@ -17,7 +17,7 @@ from schemas import TokenPayload
 
 settings = get_settings()
 
-oauth = OAuth2PasswordBearer(tokenUrl="/auth/login", scheme_name="JWT")
+oauth = OAuth2PasswordBearer(tokenUrl="/api/auth/login", scheme_name="JWT")
 
 
 async def get_current_user(

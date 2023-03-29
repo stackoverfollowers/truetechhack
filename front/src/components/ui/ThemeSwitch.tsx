@@ -3,7 +3,10 @@ import { Fragment, useState, useEffect, useCallback } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import cx from 'clsx';
 import { Theme } from '@/redux/slices/themeSlice';
-import { useUpdatePreferencesMutation } from '@/redux/services/user';
+import {
+	useGetPreferencesQuery,
+	useUpdatePreferencesMutation,
+} from '@/redux/services/user';
 import { useUser } from '@/hooks/use-user';
 import useFontSize from '@/hooks/use-font-size';
 
@@ -56,6 +59,9 @@ const ThemeSwitch = () => {
 	const [updatePreferences, { isLoading }] = useUpdatePreferencesMutation();
 	const { user } = useUser();
 
+	const { data: preferences, isLoading: isPreferencesLoading } =
+		useGetPreferencesQuery(undefined, { skip: !user });
+
 	useEffect(() => {
 		setMounted(true);
 	}, []);
@@ -71,7 +77,7 @@ const ThemeSwitch = () => {
 
 		if (user) {
 			updatePreferences({
-				user_id: user?.id,
+				...preferences,
 				theme: value,
 			});
 		}
