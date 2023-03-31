@@ -1,9 +1,14 @@
+import datetime
 from typing import Literal
 
 from pydantic import BaseModel, SecretStr, validator
-from schemas_mixins import PydanticTimestampMixin
 
 from db.models import UserPreferences
+
+
+class PydanticTimestampMixin:
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
 
 class UserInSchema(BaseModel):

@@ -7,7 +7,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from constants import get_settings
+from config import get_settings
 from db.models import *
 
 settings = get_settings()

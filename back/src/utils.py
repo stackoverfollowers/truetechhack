@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from jose import jwt
 from passlib.context import CryptContext
 
-from constants import get_settings
+from config import get_settings
 
 settings = get_settings()
 

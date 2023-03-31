@@ -2,17 +2,16 @@ import os
 import shutil
 import uuid
 from enum import IntEnum
-from typing import Annotated, Literal
+from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, File, HTTPException, Request, UploadFile
-from fastapi.responses import JSONResponse
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from starlette import status
 
-from constants import get_settings
+from config import get_settings
 from db.engine import get_async_session
 from db.models import EpilepticTiming, User, Video, VideoPreferences
 from dependencies import (

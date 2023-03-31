@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime
 
 from fastapi import Depends, HTTPException
@@ -10,9 +9,9 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from starlette import status
 
-from constants import get_settings
+from config import get_settings
 from db.engine import get_async_session
-from db.models import EpilepticTiming, User, UserPreferences, Video, VideoPreferences
+from db.models import User, UserPreferences, Video, VideoPreferences
 from schemas import TokenPayload
 
 settings = get_settings()

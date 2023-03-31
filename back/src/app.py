@@ -3,7 +3,7 @@ from fastapi_pagination import add_pagination
 from handlers import http_exception_handler
 from starlette.middleware.cors import CORSMiddleware
 
-from constants import get_settings
+from config import get_settings
 from routers import auth_router, user_router, video_router
 
 settings = get_settings()
@@ -17,7 +17,7 @@ def create_app():
         docs_url="/api/docs",
         openapi_url="/api/openapi.json",
     )
-    api = APIRouter(prefix='/api')
+    api = APIRouter(prefix="/api")
     api.include_router(auth_router)
     api.include_router(video_router)
     api.include_router(user_router)

@@ -1,6 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 from pydantic import BaseSettings, PostgresDsn, RedisDsn, validator
 
@@ -11,10 +11,10 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_DB: str
     POSTGRES_PORT: str
-    DATABASE_URI: Optional[PostgresDsn] = None
+    DATABASE_URI: PostgresDsn | None = None
 
     @validator("DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+    def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -30,10 +30,10 @@ class Settings(BaseSettings):
     REDIS_PORT: str
     REDIS_PASSWORD: str
 
-    REDIS_URI: Optional[RedisDsn] = None
+    REDIS_URI: RedisDsn | None = None
 
     @validator("REDIS_URI", pre=True)
-    def assemble_redis_uri(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+    def assemble_redis_uri(cls, v: str | None, values: dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return RedisDsn.build(
@@ -44,10 +44,10 @@ class Settings(BaseSettings):
             path="/1",
         )
 
-    CELERY_DBURI: Optional[PostgresDsn] = None
+    CELERY_DBURI: PostgresDsn | None = None
 
     @validator("CELERY_DBURI", pre=True)
-    def assemble_celery_dburi(cls, v: Optional[str], values: Union[str, Any]) -> Any:
+    def assemble_celery_dburi(cls, v: str | None, values: str | Any) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -76,6 +76,6 @@ class Settings(BaseSettings):
     ADMINS_USERNAMES = ["admin"]
 
 
-@lru_cache()
+@lru_cache
 def get_settings():
     return Settings()

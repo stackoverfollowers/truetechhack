@@ -1,6 +1,6 @@
 import logging
 from contextlib import contextmanager
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from fastapi import HTTPException
 from sqlalchemy import create_engine
@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import Session, scoped_session, sessionmaker
 
-from constants import get_settings
+from config import get_settings
 
 logger = logging.getLogger(__name__)
 
