@@ -21,7 +21,7 @@ repos:
         args: [--fix=lf]
         types: [python]
       - id: requirements-txt-fixer
-        args: [filenames=^back/src/requirements.txt]
+        args: [filenames=^back/requirements.txt]
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
 
